@@ -13,7 +13,7 @@ const Navbarfristn = () => {
         <Container>
           <h1 className="brand-title mb-0">
             Aadarsh{" "}
-            <span style={{ color: "blue", backgroundColor: "white" }}>
+            <span style={{ color: "orange", backgroundColor: "white" }}>
               Agency
             </span>
           </h1>
@@ -148,6 +148,10 @@ const Navbarfristn = () => {
 
                       <Dropdown.Item as={Link} to="/display-salesman">
                         Display Sales Man
+                      </Dropdown.Item>
+
+                      <Dropdown.Item as={Link} to="/display-billing-report">
+                        Product Billing Report
                       </Dropdown.Item>
                     </div>
                   </div>

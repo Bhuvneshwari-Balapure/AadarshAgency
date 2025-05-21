@@ -12,6 +12,7 @@ import ServicingTask from "../Components/Masters/Servicing/ServicingTask";
 import CustomerDetail from "../Components/Customer/CustomerDetail";
 import AddSalesMan from "../Components/Masters/SalesMan/AddSalesMan";
 import DisplaySalesMan from "../Components/Masters/SalesMan/DisplaySalesMan";
+import ProductBillingReport from "../Components/Masters/SalesMan/ProductBillingReport";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -24,6 +25,10 @@ const AppRoutes = () => {
         <Route path="/customer-detail" element={<CustomerDetail />} />
         <Route path="/add-salesman" element={<AddSalesMan />} />
         <Route path="/display-salesman" element={<DisplaySalesMan />} />
+        <Route
+          path="/display-billing-report"
+          element={<ProductBillingReport />}
+        />
       </Route>
     </Routes>
   );

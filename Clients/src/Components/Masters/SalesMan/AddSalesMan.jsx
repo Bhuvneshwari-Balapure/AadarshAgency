@@ -39,12 +39,13 @@ function AddSalesMan() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/salesman",
+        "http://localhost:8080/api/salesman",
         data,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
+      console.log(response);
       alert("Salesman saved successfully!");
       setFormData({
         name: "",
