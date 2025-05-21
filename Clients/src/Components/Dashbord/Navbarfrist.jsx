@@ -13,7 +13,7 @@ const Navbarfristn = () => {
         <Container>
           <h1 className="brand-title mb-0">
             Aadarsh{" "}
-            <span style={{ color: "red", backgroundColor: "white" }}>
+            <span style={{ color: "blue", backgroundColor: "white" }}>
               Agency
             </span>
           </h1>
@@ -124,6 +124,30 @@ const Navbarfristn = () => {
                       </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/kyc">
                         KYC
+                      </Dropdown.Item>
+                    </div>
+                  </div>
+                </Dropdown.Menu>
+              </Dropdown>
+
+              {/* SalesMan */}
+              <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
+                <Dropdown.Toggle as={Nav.Link}>
+                  <FiLayers className="nav-icon" />
+                  Sales Man <FiChevronDown size={12} className="ms-1" />
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  className="custom-dropdown p-4"
+                  style={{ minWidth: "600px" }}
+                >
+                  <div className="row">
+                    <div className="col-md-4">
+                      <Dropdown.Item as={Link} to="/add-salesman">
+                        Add Sales Man
+                      </Dropdown.Item>
+
+                      <Dropdown.Item as={Link} to="/display-salesman">
+                        Display Sales Man
                       </Dropdown.Item>
                     </div>
                   </div>
