@@ -64,67 +64,25 @@ const Navbarfristn = () => {
                   <div className="row">
                     {/* Company */}
                     <div className="col-md-4">
-                      <Dropdown.Item as={Link} to="/composite">
+                      <Dropdown.Item as={Link} to="/company">
                         Add Company
                       </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/marketing-task">
+                      <Dropdown.Item as={Link} to="/pro-categories">
                         Product Category
                       </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/servicing-task">
+                      <Dropdown.Item as={Link} to="/pro-SubCat">
                         Product SubCategory
                       </Dropdown.Item>
                     </div>
 
                     {/* Product Master */}
                     <div className="col-md-4">
-                      <Dropdown.Item as={Link} to="/area">
+                      <Dropdown.Item as={Link} to="/product">
                         Create Product
                       </Dropdown.Item>
-                    </div>
-                  </div>
-                </Dropdown.Menu>
-              </Dropdown>
-
-              {/* Customers */}
-              <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
-                <Dropdown.Toggle as={Nav.Link}>
-                  <FiLayers className="nav-icon" />
-                  Costomers <FiChevronDown size={12} className="ms-1" />
-                </Dropdown.Toggle>
-                <Dropdown.Menu
-                  className="custom-dropdown p-4"
-                  style={{ minWidth: "600px" }}
-                >
-                  <div className="row">
-                    {/* Task Master */}
-                    <div className="col-md-4">
-                      <Dropdown.Item as={Link} to="/website-download">
-                        Website Download
-                      </Dropdown.Item>
-
-                      <Dropdown.Item as={Link} to="/add-suspect-lead">
-                        Add Suspect Lead
-                      </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="">
-                        Import Lead
-                      </Dropdown.Item>
-                    </div>
-                    <div className="col-md-4">
-                      <Dropdown.Item as={Link} to="/add-prospect-lead">
-                        Add Prospect Lead
-                      </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/customer-detail">
-                        Customer Detail
-                      </Dropdown.Item>
-                    </div>
-
-                    <div className="col-md-4">
-                      <Dropdown.Item as={Link} to="/client">
-                        Client
-                      </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/kyc">
-                        KYC
-                      </Dropdown.Item>
+                      {/* <Dropdown.Item as={Link} to="/display-billing-report">
+                        Product Billing Report
+                      </Dropdown.Item> */}
                     </div>
                   </div>
                 </Dropdown.Menu>
@@ -149,9 +107,29 @@ const Navbarfristn = () => {
                       <Dropdown.Item as={Link} to="/display-salesman">
                         Display Sales Man
                       </Dropdown.Item>
+                    </div>
+                  </div>
+                </Dropdown.Menu>
+              </Dropdown>
 
-                      <Dropdown.Item as={Link} to="/display-billing-report">
-                        Product Billing Report
+              {/* Product Invoice */}
+              <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
+                <Dropdown.Toggle as={Nav.Link}>
+                  <FiLayers className="nav-icon" />
+                  Product Invoice <FiChevronDown size={12} className="ms-1" />
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  className="custom-dropdown p-4"
+                  style={{ minWidth: "600px" }}
+                >
+                  <div className="row">
+                    <div className="col-md-4">
+                      <Dropdown.Item as={Link} to="/add-invoice">
+                        Add Invoice
+                      </Dropdown.Item>
+
+                      <Dropdown.Item as={Link} to="/display-invoice">
+                        View Invoice
                       </Dropdown.Item>
                     </div>
                   </div>

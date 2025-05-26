@@ -13,6 +13,7 @@ const CategoryRoute = require("./Routes/CategoryRoute");
 const SubCategoryRoute = require("./Routes/SubCategoryRoute");
 const ProductRoute = require("./Routes/ProductRoute");
 const SalesManRoute = require("./Routes/SalesManRoute");
+const BillingRoute = require("./Routes/ProductBillingRoute");
 
 // ---------------------------------------------------------------------
 app.use(bodyParser.json());
@@ -33,6 +34,7 @@ app.use("/api/category", CategoryRoute);
 app.use("/api/Subcategory", SubCategoryRoute);
 app.use("/api/product", ProductRoute);
 app.use("/api/salesman", SalesManRoute);
+app.use("/api/pro-billing", BillingRoute);
 
 const port = process.env.PORT;
 app.listen(port, () => {

@@ -59,7 +59,7 @@ const getProducts = async (req, res) => {
     if (subCategoryId) filter.subCategoryId = subCategoryId;
 
     const products = await Product.find(filter)
-      .populate("companyId", "companyName")
+      .populate("companyId", "name")
       .populate("categoryId", "cat")
       .populate("subCategoryId", "subCat")
       .sort({ lastUpdated: -1 });
@@ -68,7 +68,7 @@ const getProducts = async (req, res) => {
       ...p.toObject(),
       categoryName: p.categoryId?.cat || null,
       subCategoryName: p.subCategoryId?.subCat || null,
-      companyName: p.companyId?.companyName || null,
+      name: p.companyId?.name || null,
     }));
 
     res.status(200).json(formattedProducts);
@@ -77,8 +77,25 @@ const getProducts = async (req, res) => {
     res.status(500).json({ error: "Server error." });
   }
 };
+const UpdateProductQuantity = async (req, res) => {
+  const { productId, quantity } = req.body;
+  try {
+    const product = await Product.findById(productId);
+    if (!product || product.availableQty < quantity) {
+      return res.status(400).json({ message: "Insufficient stock." });
+    }
+
+    product.availableQty -= quantity;
+    await product.save();
+
+    res.json({ message: "Quantity updated successfully.", product });
+  } catch (error) {
+    res.status(500).json({ message: "Server error.", error });
+  }
+};
 
 module.exports = {
   createProduct,
   getProducts,
+  UpdateProductQuantity,
 };
