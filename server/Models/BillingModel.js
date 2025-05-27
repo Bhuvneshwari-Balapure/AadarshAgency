@@ -1,11 +1,13 @@
+// models/Invoice.js
+
 const mongoose = require("mongoose");
 
 const BillingItemSchema = new mongoose.Schema({
-  productName: String,
-  categoryName: String,
-  hsnCode: String,
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" }, // Reference only
+  itemName: String,
   unit: String,
   qty: Number,
+  Free: Number,
   rate: Number,
   sch: Number,
   schAmt: Number,

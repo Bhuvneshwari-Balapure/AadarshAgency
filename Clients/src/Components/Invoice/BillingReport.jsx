@@ -64,12 +64,12 @@ import ProductBillingReport from "./ProductBillingReport";
 import CustomerBilling from "./CustomerBilling";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom"; // ✅ Correct import
+// import { useNavigate } from "react-router-dom"; // ✅ Correct import
 
 function BillingReport() {
   const [billingData, setBillingData] = useState([]);
   const [customerData, setCustomerData] = useState({});
-  const navigate = useNavigate(); // ✅ Correct hook
+  // const navigate = useNavigate(); // ✅ Correct hook
   const [finalAmount, setFinalAmount] = useState(0);
 
   const handleBillingDataChange = (data, totalAmount) => {
@@ -93,9 +93,12 @@ function BillingReport() {
 
       const response = await axios.post("/pro-billing", finalData);
 
+      console.log(response.data, "Response from server"); // ✅ Log the response
+      // const invoiceId = response._id;
+
       toast.success("Invoice saved successfully!");
-      navigate(`/generate-invoice`); // ✅ Works correctly now
-      console.log("Response from server:", response.data);
+      // navigate(`/generate-invoice/${invoiceId}`); // ✅ Works correctly now
+      // console.log("Response from server:", response.data);
     } catch (error) {
       toast.error("Failed to save invoice");
       console.error("Error saving invoice:", error);

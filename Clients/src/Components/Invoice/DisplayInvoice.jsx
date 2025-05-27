@@ -60,6 +60,9 @@ const DisplayInvoice = () => {
             <th>Date</th>
             <th>Item Purchased</th>
             <th>Quantity</th>
+            {/* <th>Qty</th> */}
+            <th>Free</th>
+            <th>Total Qty</th>
             <th>Total Price</th>
             {/* <th>Salesman</th> */}
             <th>Print</th>
@@ -79,22 +82,49 @@ const DisplayInvoice = () => {
                     ? new Date(customer.Billdate).toLocaleDateString()
                     : "-"}
                 </td>
+
+                {/* Item Purchased */}
                 <td>
-                  <ul className="mb-0">
-                    {billing.map((item, idx) => (
-                      <li key={idx}>{item.productName || "-"}</li>
-                    ))}
-                  </ul>
+                  {billing.map((item, idx) => (
+                    <div key={idx}>
+                      {item.itemName || "-"}
+                      <br />
+                    </div>
+                  ))}
                 </td>
+
+                {/* Qty */}
                 <td>
-                  <ul className="mb-0">
-                    {billing.map((item, idx) => (
-                      <li key={idx}>{item.qty || "-"}</li>
-                    ))}
-                  </ul>
+                  {billing.map((item, idx) => (
+                    <div key={idx}>
+                      {item.qty || 0}
+                      <br />
+                    </div>
+                  ))}
                 </td>
+
+                {/* Free */}
+                <td>
+                  {billing.map((item, idx) => (
+                    <div key={idx}>
+                      {item.Free || 0}
+                      <br />
+                    </div>
+                  ))}
+                </td>
+
+                {/* Total Qty */}
+                <td>
+                  {billing.map((item, idx) => (
+                    <div key={idx}>
+                      {(item.qty || 0) + (item.Free || 0)}
+                      <br />
+                    </div>
+                  ))}
+                </td>
+
                 <td>{invoice.finalAmount || 0}</td>
-                {/* <td>{invoice.salesmanId?.name || "-"}</td> */}
+
                 <td>
                   <Button
                     variant="outline-primary"

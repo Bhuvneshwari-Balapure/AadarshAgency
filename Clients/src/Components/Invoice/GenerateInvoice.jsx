@@ -108,7 +108,7 @@ const GenerateInvoice = () => {
               <br />
               {companyId.address || "Address not available"}
               <br />
-              <strong>GSTIN:</strong> {customer?.gstin || "N/A"}
+              <strong>GSTIN:</strong> {companyId.gstNumber || "N/A"}
               <br />
               <strong>Number:</strong> {companyId.mobile || "N/A"}
             </div>
@@ -170,10 +170,10 @@ const GenerateInvoice = () => {
                     Rate
                   </th>
                   <th style={{ border: "1px solid black", padding: "8px" }}>
-                    Schm Amt
+                    Sch Amt
                   </th>
                   <th style={{ border: "1px solid black", padding: "8px" }}>
-                    Sch Amt
+                    CD Amt
                   </th>
                   <th style={{ border: "1px solid black", padding: "8px" }}>
                     CD%
@@ -211,16 +211,16 @@ const GenerateInvoice = () => {
                       {item.qty} {item.unit || ""}
                     </td>
                     <td style={{ border: "1px solid black", padding: "8px" }}>
-                      {item.free || 0}
+                      {item.Free || 0}
                     </td>
                     <td style={{ border: "1px solid black", padding: "8px" }}>
                       {item.rate}
                     </td>
                     <td style={{ border: "1px solid black", padding: "8px" }}>
-                      {item.schemeAmount || 0}
+                      {item.schAmt || 0}
                     </td>
                     <td style={{ border: "1px solid black", padding: "8px" }}>
-                      {item.schAmount || 0}
+                      {item.cdAmt || 0}
                     </td>
                     <td style={{ border: "1px solid black", padding: "8px" }}>
                       {item.cd || 0}%
@@ -262,7 +262,11 @@ const GenerateInvoice = () => {
                     C/S 0
                   </th>
                   <th style={{ border: "1px solid black", padding: "8px" }}>
-                    PCS = 250
+                    PCS ={" "}
+                    {billing.reduce(
+                      (acc, item) => acc + (item.qty || 0) + (item.Free || 0),
+                      0
+                    )}
                   </th>
                   <th style={{ border: "1px solid black", padding: "8px" }}>
                     0
@@ -277,7 +281,7 @@ const GenerateInvoice = () => {
                     {totals.sgst?.toFixed(2) || "0.00"}
                   </th>
                   <th style={{ border: "1px solid black", padding: "8px" }}>
-                    25.63
+                    {billing.amount || "0.00"}
                   </th>
                   <th style={{ border: "1px solid black", padding: "8px" }}>
                     {totals.basicAmount?.toFixed(2) || "0.00"}
@@ -289,7 +293,7 @@ const GenerateInvoice = () => {
                     {totals.cgst?.toFixed(2) || "0.00"}
                   </th>
                   <th style={{ border: "1px solid black", padding: "8px" }}>
-                    {finalAmount || totals.total?.toFixed(2) || "0.00"}
+                    {finalAmount || totals.amount?.toFixed(2) || "0.00"}
                   </th>
                 </tr>
               </thead>

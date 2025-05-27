@@ -1,10 +1,13 @@
+const Product = require("../Models/ProductModel");
 const Invoice = require("../Models/BillingModel");
 
 const createBilling = async (req, res) => {
   console.log(req.body, "create Billing");
+
   try {
     const { customer, billing, finalAmount, companyId, salesmanId } = req.body;
 
+    // 1. Create Invoice (no transaction)
     const invoice = new Invoice({
       companyId,
       salesmanId,
@@ -14,10 +17,35 @@ const createBilling = async (req, res) => {
     });
 
     await invoice.save();
+
+    // 2. Deduct stock for each billing item (without session)
+    for (const item of billing) {
+      const totalQtyToDeduct = (item.qty || 0) + (item.Free || 0);
+
+      const product = await Product.findById(item.productId);
+
+      if (!product) {
+        throw new Error(`Product not found for ID: ${item.productId}`);
+      }
+
+      if (product.availableQty < totalQtyToDeduct) {
+        throw new Error(
+          `Insufficient stock for product ${product.productName}. Available: ${product.availableQty}, Required: ${totalQtyToDeduct}`
+        );
+      }
+
+      product.availableQty -= totalQtyToDeduct;
+      product.lastUpdated = new Date();
+
+      await product.save(); // save without session
+    }
+
     res.status(201).json({ message: "Invoice saved successfully", invoice });
   } catch (error) {
     console.error("Error saving invoice:", error);
-    res.status(500).json({ error: "Failed to save invoice" });
+    res
+      .status(500)
+      .json({ error: "Failed to save invoice", details: error.message });
   }
 };
 
@@ -33,6 +61,10 @@ const getAllInvoices = async (req, res) => {
       .populate(
         "salesmanId",
         "name designation mobile email city address alternateMobile photo username"
+      )
+      .populate(
+        "billing.productId",
+        "productName primaryUnit secondaryUnit primaryPrice secondaryPrice hsnCode gstPercent"
       );
 
     // console.log(invoices, "invoice");
@@ -68,7 +100,12 @@ const getInvoiceById = async (req, res) => {
       .populate(
         "salesmanId",
         "name designation mobile email city address alternateMobile photo username"
+      )
+      .populate(
+        "billing.productId",
+        "productName primaryUnit secondaryUnit primaryPrice secondaryPrice hsnCode gstPercent"
       );
+
     // ✅ Add this
 
     if (!invoice) {
