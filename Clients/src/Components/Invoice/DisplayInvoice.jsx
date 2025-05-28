@@ -97,7 +97,7 @@ const DisplayInvoice = () => {
                 <td>
                   {billing.map((item, idx) => (
                     <div key={idx}>
-                      {item.qty || 0}
+                      {item.qty || 0} {item.unit || ""}
                       <br />
                     </div>
                   ))}
