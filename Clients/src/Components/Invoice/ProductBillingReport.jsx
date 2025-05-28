@@ -217,10 +217,12 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
             parseFloat(r.Qty) > 0
         )
         .map((r) => ({
-          productName: r.product.productName,
-          categoryName: r.product.categoryName,
-          unit: r.Unit,
+          productId: r.product._id,
+          itemName: r.product.productName,
+          hsnCode: r.product.hsnCode,
+          unit: r.product.unit,
           qty: parseFloat(r.Qty),
+          Free: parseFloat(r.Free) || 0,
           rate: parseFloat(r.Rate),
           sch: parseFloat(r.Sch) || 0,
           schAmt: parseFloat(r.SchAmt) || 0,
@@ -230,6 +232,7 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
           gst: parseFloat(r.GST) || 0,
           amount: parseFloat(r.Amount) || 0,
         }));
+
       const recalculatedFinalTotal = updatedRows
         .reduce((sum, r) => {
           const amt = parseFloat(r.Amount);
@@ -318,8 +321,9 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
                         }
                         onChange={(selectedOption) => {
                           const selectedProduct = products.find(
-                            (p) => p._id === selectedOption.value
+                            (p) => p._id === selectedOption?.value
                           );
+                          console.log("Selected product:", selectedProduct);
                           handleChange(rowIndex, "product", selectedProduct);
                         }}
                         menuPortalTarget={document.body}
