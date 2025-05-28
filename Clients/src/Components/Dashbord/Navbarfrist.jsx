@@ -108,6 +108,14 @@ const Navbarfristn = () => {
                         Display Sales Man
                       </Dropdown.Item>
                     </div>
+                    <div className="col-md-4">
+                      <Dropdown.Item as={Link} to="/Vendor-report">
+                        Vendor Report
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/purchase">
+                        Purchase
+                      </Dropdown.Item>
+                    </div>
                   </div>
                 </Dropdown.Menu>
               </Dropdown>

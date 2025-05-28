@@ -13,6 +13,8 @@ import DisplaySalesMan from "../Components/SalesMan/DisplaySalesMan";
 import BillingReport from "../Components/Invoice/BillingReport";
 import DisplayInvoice from "../Components/Invoice/DisplayInvoice";
 import GenerateInvoice from "../Components/Invoice/GenerateInvoice";
+import VendorReport from "../Components/SalesMan/VendorReport";
+import PurchaseForm from "../Components/SalesMan/PurchaseForm";
 
 const AppRoutes = () => {
   return (
@@ -29,6 +31,8 @@ const AppRoutes = () => {
         <Route path="/generate-invoice" element={<GenerateInvoice />} />
         <Route path="/display-invoice" element={<DisplayInvoice />} />
         <Route path="/generate-invoice/:id" element={<GenerateInvoice />} />
+        <Route path="/Vendor-report" element={<VendorReport />} />
+        <Route path="/purchase" element={<PurchaseForm />} />
       </Route>
     </Routes>
   );

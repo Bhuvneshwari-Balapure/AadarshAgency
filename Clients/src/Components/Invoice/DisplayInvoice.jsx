@@ -44,6 +44,7 @@ const DisplayInvoice = () => {
   return (
     <div
       className="w-full mt-4"
+      id="displayInvoice"
       style={{
         width: "100vw",
         padding: "0 1rem",
