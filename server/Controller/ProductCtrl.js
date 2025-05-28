@@ -5,45 +5,54 @@ const createProduct = async (req, res) => {
   try {
     const {
       companyId,
-      categoryId,
-      subCategoryId,
       productName,
-      primaryUnit,
-      primaryQty,
-      secondaryUnit,
-      secondaryQty,
-      primaryPrice,
-      secondaryPrice,
+      unit,
+      mrp,
+      salesRate,
+      purchaseRate,
       availableQty,
       hsnCode,
       gstPercent,
+      // categoryId,
+      // subCategoryId,
+      // primaryUnit,
+      // secondaryUnit,
+      // primaryPrice,
+      // secondaryPrice,
     } = req.body;
 
     // Basic validation (add more if needed)
-    if (!companyId || !categoryId || !subCategoryId || !productName) {
-      return res.status(400).json({ error: "Missing required fields." });
-    }
+    // if (!companyId || !categoryId || !subCategoryId || !productName) {
+    //   return res.status(400).json({ error: "Missing required fields." });
+    // }
 
     const newProduct = new Product({
       companyId,
-      categoryId,
-      subCategoryId,
       productName,
-      primaryUnit,
-      primaryQty,
-      secondaryUnit,
-      secondaryQty,
-      primaryPrice,
-      secondaryPrice,
+      unit,
+      mrp,
+      salesRate,
+      purchaseRate,
       availableQty,
       hsnCode,
       gstPercent,
+      // categoryId,
+      // subCategoryId,
+      // primaryUnit,
+      // secondaryUnit,
+      // primaryPrice,
+      // secondaryPrice,
     });
 
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
   } catch (err) {
     console.error("Error creating product:", err);
+
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ error: err.message });
+    }
+
     res.status(500).json({ error: "Server error." });
   }
 };
@@ -51,23 +60,24 @@ const createProduct = async (req, res) => {
 // GET /api/products - Get all products (optionally filtered)
 const getProducts = async (req, res) => {
   try {
-    const { companyId, categoryId, subCategoryId } = req.query;
+    // const { companyId, categoryId, subCategoryId } = req.query;
+    const { companyId } = req.query;
 
     const filter = {};
     if (companyId) filter.companyId = companyId;
-    if (categoryId) filter.categoryId = categoryId;
-    if (subCategoryId) filter.subCategoryId = subCategoryId;
+    // if (categoryId) filter.categoryId = categoryId;
+    // if (subCategoryId) filter.subCategoryId = subCategoryId;
 
     const products = await Product.find(filter)
       .populate("companyId", "name")
-      .populate("categoryId", "cat")
-      .populate("subCategoryId", "subCat")
+      // .populate("categoryId", "cat")
+      // .populate("subCategoryId", "subCat")
       .sort({ lastUpdated: -1 });
 
     const formattedProducts = products.map((p) => ({
       ...p.toObject(),
-      categoryName: p.categoryId?.cat || null,
-      subCategoryName: p.subCategoryId?.subCat || null,
+      // categoryName: p.categoryId?.cat || null,
+      // subCategoryName: p.subCategoryId?.subCat || null,
       name: p.companyId?.name || null,
     }));
 
@@ -93,9 +103,84 @@ const UpdateProductQuantity = async (req, res) => {
     res.status(500).json({ message: "Server error.", error });
   }
 };
+// PUT /api/products/:id - Update a product
+const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const {
+    productName,
+    unit,
+    mrp,
+    salesRate,
+    purchaseRate,
+    availableQty,
+    hsnCode,
+    gstPercent,
+  } = req.body;
+
+  try {
+    // Validation
+    if (
+      !productName ||
+      !unit ||
+      mrp === "" ||
+      salesRate === "" ||
+      purchaseRate === ""
+    ) {
+      return res.status(400).json({ error: "Missing required fields." });
+    }
+    if (availableQty < 0 || mrp < 0 || salesRate < 0 || purchaseRate < 0) {
+      return res
+        .status(400)
+        .json({ error: "Quantity and rates must be non-negative." });
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+        productName,
+        unit,
+        mrp,
+        salesRate,
+        purchaseRate,
+        hsnCode,
+        gstPercent,
+        lastUpdated: Date.now(),
+      },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ error: "Product not found." });
+    }
+
+    res.json(updatedProduct);
+  } catch (err) {
+    console.error("Error updating product:", err);
+    res.status(500).json({ error: "Server error." });
+  }
+};
+// DELETE /api/products/:id - Delete a product
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+      return res.status(404).json({ error: "Product not found." });
+    }
+
+    res.json({ message: "Product deleted successfully." });
+  } catch (err) {
+    console.error("Error deleting product:", err);
+    res.status(500).json({ error: "Server error." });
+  }
+};
 
 module.exports = {
   createProduct,
   getProducts,
+  updateProduct,
   UpdateProductQuantity,
+  deleteProduct,
 };

@@ -42,7 +42,7 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
     "Sch",
     "SchAmt",
     "CD",
-    "CDAmt",
+    // "CDAmt",
     "Total",
     "GST",
     "Amount",
@@ -98,28 +98,37 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
     if (field === "product") {
       row.product = value;
       row.GST = value.gstPercent || "";
-      row.Unit = value.primaryUnit || "";
-      row.Rate = value.primaryPrice || "";
+      row.Unit = value.unit || ""; // Single unit field
+      row.Rate = value.mrp || ""; // Use mrp directly
+      // row.Unit = value.primaryUnit || "";
+      // row.Rate = value.primaryPrice || "";
     }
 
     if (field === "Unit" && row.product) {
       const prod = row.product;
-      if (value === prod.primaryUnit) {
-        row.Rate = prod.primaryPrice;
-      } else if (value === prod.secondaryUnit) {
-        row.Rate = prod.secondaryPrice;
+      if (value === prod.unit) {
+        row.Rate = prod.mrp;
       }
+      // if (value === prod.unit) {
+      //   row.Rate = prod.mrp;
+      // }
+      // else if (value === prod.secondaryUnit) {
+      //   row.Rate = prod.secondaryPrice;
+      // }
     }
 
     if (field === "Qty" && row.product) {
       const qtyNum = parseFloat(value);
       const prod = row.product;
       if (!isNaN(qtyNum) && qtyNum > 0) {
-        if (row.Unit === prod.primaryUnit) {
-          row.Rate = prod.primaryPrice;
-        } else if (row.Unit === prod.secondaryUnit) {
-          row.Rate = prod.secondaryPrice;
+        if (!isNaN(qtyNum) && qtyNum > 0) {
+          row.Rate = prod.mrp; // Always use mrp as rate
         }
+        // if (row.Unit === prod.primaryUnit) {
+        //   row.Rate = prod.primaryPrice;
+        // } else if (row.Unit === prod.secondaryUnit) {
+        //   row.Rate = prod.secondaryPrice;
+        // }
       }
     }
 
@@ -166,9 +175,9 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
       .map((r) => ({
         productId: r.product._id, // ✅ Actual MongoDB reference
         itemName: r.product.productName, // Optional: for readability
-        categoryName: r.product.categoryName,
+        // categoryName: r.product.categoryName,
         hsnCode: r.product.hsnCode,
-        unit: r.Unit,
+        unit: r.product.unit,
         qty: parseFloat(r.Qty),
         Free: parseFloat(r.Free) || 0,
         rate: parseFloat(r.Rate),
@@ -296,13 +305,13 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
                       <Select
                         className="w-100"
                         options={products.map((p) => ({
-                          label: `${p.productName} (${p.categoryName})`,
+                          label: `${p.productName}`,
                           value: p._id,
                         }))}
                         value={
                           row.product
                             ? {
-                                label: `${row.product.productName} (${row.product.categoryName})`,
+                                label: `${row.product.productName}`,
                                 value: row.product._id,
                               }
                             : null
@@ -322,22 +331,22 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
                     ) : field === "Unit" ? (
                       <select
                         className="form-control"
-                        value={row.Unit}
+                        value={row.product?.unit}
                         onChange={(e) =>
                           handleChange(rowIndex, "Unit", e.target.value)
                         }
                       >
                         <option value="">Select Unit</option>
-                        {row.product?.primaryUnit && (
-                          <option value={row.product.primaryUnit}>
-                            {row.product.primaryUnit}
+                        {row.product?.unit && (
+                          <option value={row.product?.unit}>
+                            {row.product?.unit}
                           </option>
                         )}
-                        {row.product?.secondaryUnit && (
+                        {/* {row.product?.secondaryUnit && (
                           <option value={row.product.secondaryUnit}>
                             {row.product.secondaryUnit}
                           </option>
-                        )}
+                        )} */}
                       </select>
                     ) : ["SchAmt", "CDAmt", "Total", "Amount"].includes(
                         field

@@ -67,12 +67,12 @@ const Navbarfristn = () => {
                       <Dropdown.Item as={Link} to="/company">
                         Add Company
                       </Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/pro-categories">
+                      {/* <Dropdown.Item as={Link} to="/pro-categories">
                         Product Category
                       </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/pro-SubCat">
                         Product SubCategory
-                      </Dropdown.Item>
+                      </Dropdown.Item> */}
                     </div>
 
                     {/* Product Master */}

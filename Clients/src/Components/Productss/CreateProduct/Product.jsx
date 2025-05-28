@@ -9,25 +9,30 @@ const Product = () => {
 
   const [formData, setFormData] = useState({
     companyId: "",
-    categoryId: "",
-    subCategoryId: "",
     productName: "",
-    primaryUnit: "",
-    secondaryUnit: "",
-    primaryPrice: "",
-    secondaryPrice: "",
+    unit: "", // New field
+    mrp: "", // New field
+    salesRate: "", // New field
+    purchaseRate: "", // New field
     availableQty: "",
     hsnCode: "",
-    gstPercent: 9,
+    gstPercent: 0,
+    // categoryId: "",
+    // subCategoryId: "",
+    // primaryUnit: "",
+    // secondaryUnit: "",
+    // primaryPrice: "",
+    // secondaryPrice: "",
   });
 
   const [companies, setCompanies] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
+  // const [subCategories, setSubCategories] = useState([]);
 
   const fetchProducts = async () => {
     try {
       const res = await axios.get("/product");
+      console.log(res.data, "res.data");
       setProducts(res.data || []);
     } catch (err) {
       console.error("Failed to fetch products:", err);
@@ -37,15 +42,19 @@ const Product = () => {
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        const [companyRes, categoryRes, subCategoryRes] = await Promise.all([
+        const [
+          companyRes,
+          // categoryRes,
+          // subCategoryRes
+        ] = await Promise.all([
           axios.get("/company"),
           axios.get("/category"),
           axios.get("/Subcategory"),
         ]);
 
         setCompanies(companyRes.data || []);
-        setCategories(categoryRes.data || []);
-        setSubCategories(subCategoryRes.data || []);
+        // setCategories(categoryRes.data || []);
+        // setSubCategories(subCategoryRes.data || []);
       } catch (err) {
         console.error("Error fetching dropdown data:", err);
       }
@@ -64,40 +73,100 @@ const Product = () => {
     }));
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const productData = {
+  //       ...formData,
+  //       lastUpdated: new Date(),
+  //     };
+
+  //     await axios.post("/product", productData);
+  //     alert("Product created successfully!");
+  //     setFormData({
+  //       companyId: "",
+  //       categoryId: "",
+  //       subCategoryId: "",
+  //       productName: "",
+  //       primaryUnit: "",
+  //       secondaryUnit: "",
+  //       primaryPrice: "",
+  //       secondaryPrice: "",
+  //       availableQty: 0,
+  //       hsnCode: "",
+  //       gstPercent: 9,
+  //     });
+  //     fetchProducts();
+  //     // Refresh product list after creation
+  //   } catch (err) {
+  //     console.error("Error creating product:", err);
+  //     alert("Failed to create product.");
+  //   }
+  // };
+
+  const handleEdit = (index) => {
+    const selectedProduct = products[index];
+    setFormData({
+      _id: selectedProduct._id, // <-- Add this
+      companyId: selectedProduct.companyId?._id || "",
+      productName: selectedProduct.productName || "",
+      unit: selectedProduct.unit || "",
+      mrp: selectedProduct.mrp || "",
+      salesRate: selectedProduct.salesRate || "",
+      purchaseRate: selectedProduct.purchaseRate || "",
+      availableQty: selectedProduct.availableQty || "",
+      hsnCode: selectedProduct.hsnCode || "",
+      gstPercent: selectedProduct.gstPercent || 9,
+    });
+    setEditIndex(index);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const productData = {
-        ...formData,
+        companyId: formData.companyId,
+        productName: formData.productName,
+        unit: formData.unit,
+        mrp: formData.mrp,
+        salesRate: formData.salesRate,
+        purchaseRate: formData.purchaseRate,
+        availableQty: formData.availableQty,
+        hsnCode: formData.hsnCode,
+        gstPercent: formData.gstPercent,
         lastUpdated: new Date(),
       };
+      console.log("Submitting productData:", productData);
 
-      await axios.post("/product", productData);
-      alert("Product created successfully!");
+      if (formData._id) {
+        // Edit mode - update existing product
+        await axios.put(`/product/${formData._id}`, productData);
+        alert("Product updated successfully!");
+      } else {
+        // Create mode - add new product
+        await axios.post("/product", productData);
+        alert("Product created successfully!");
+      }
+
+      // Reset form and refresh list
       setFormData({
         companyId: "",
-        categoryId: "",
-        subCategoryId: "",
         productName: "",
-        primaryUnit: "",
-        secondaryUnit: "",
-        primaryPrice: "",
-        secondaryPrice: "",
-        availableQty: 0,
+        unit: "",
+        mrp: "",
+        salesRate: "",
+        purchaseRate: "",
+        availableQty: "",
         hsnCode: "",
         gstPercent: 9,
       });
+      setEditIndex(null);
       fetchProducts();
-      // Refresh product list after creation
     } catch (err) {
-      console.error("Error creating product:", err);
-      alert("Failed to create product.");
+      console.error("Error submitting product:", err);
+      alert("Failed to submit product.");
     }
-  };
-
-  const handleEdit = (index) => {
-    setFormData(products[index]);
-    setEditIndex(index);
   };
 
   const handleDelete = async (index) => {
@@ -107,7 +176,7 @@ const Product = () => {
     try {
       await axios.delete(`/product/${productToDelete._id}`);
       alert("Product deleted successfully!");
-      fetchProducts(); // Refresh list after deletion
+      fetchProducts();
     } catch (err) {
       console.error("Error deleting product:", err);
       alert("Failed to delete product.");
@@ -135,55 +204,15 @@ const Product = () => {
                       value={formData.companyId}
                       onChange={handleChange}
                       className="form-control"
-                      required
                     >
                       <option value="">Select Company</option>
                       {companies.map((c) => (
                         <option key={c._id} value={c._id}>
-                          {c.companyName || c.name}
+                          {c.name}
                         </option>
                       ))}
                     </select>
                   </div>
-
-                  {/* Category */}
-                  <div className="col-md-4 mb-3">
-                    <label>Category</label>
-                    <select
-                      name="categoryId"
-                      value={formData.categoryId}
-                      onChange={handleChange}
-                      className="form-control"
-                      required
-                    >
-                      <option value="">Select Category</option>
-                      {categories.map((c) => (
-                        <option key={c._id} value={c._id}>
-                          {c.cat}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* SubCategory */}
-                  <div className="col-md-4 mb-3">
-                    <label>Sub Category</label>
-                    <select
-                      name="subCategoryId"
-                      value={formData.subCategoryId}
-                      onChange={handleChange}
-                      className="form-control"
-                      required
-                    >
-                      <option value="">Select SubCategory</option>
-                      {subCategories.map((s) => (
-                        <option key={s._id} value={s._id}>
-                          {s.subCat}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
                   {/* Other inputs */}
                   <div className="col-md-4 mb-3">
                     <label>Product Name</label>
@@ -193,11 +222,49 @@ const Product = () => {
                       value={formData.productName}
                       onChange={handleChange}
                       className="form-control"
-                      required
                     />
                   </div>
 
-                  <div className="col-md-2 mb-3">
+                  {/* Category */}
+                  {/* <div className="col-md-4 mb-3">
+                    <label>Category</label>
+                    <select
+                      name="categoryId"
+                      value={formData.categoryId}
+                      onChange={handleChange}
+                      className="form-control"
+                      //   
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((c) => (
+                        <option key={c._id} value={c._id}>
+                          {c.cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div> */}
+
+                  {/* SubCategory */}
+                  {/* <div className="col-md-4 mb-3">
+                    <label>Sub Category</label>
+                    <select
+                      name="subCategoryId"
+                      value={formData.subCategoryId}
+                      onChange={handleChange}
+                      className="form-control"
+                      //   
+                    >
+                      <option value="">Select SubCategory</option>
+                      {subCategories.map((s) => (
+                        <option key={s._id} value={s._id}>
+                          {s.subCat}
+                        </option>
+                      ))}
+                    </select>
+                  </div> */}
+
+                  {/* ------------Primary and Secondary Unit / Price code------------------- */}
+                  {/* <div className="col-md-2 mb-3">
                     <label>Primary Unit</label>
                     <input
                       type="text"
@@ -239,7 +306,70 @@ const Product = () => {
                       onChange={handleChange}
                       className="form-control"
                     />
+                  </div> */}
+                  {/* ----------------------------------------------------------- */}
+
+                  {/* ------------------------Unit dropdown / MRP / Purchase-Sales Rate--------------------- */}
+                  <div className="col-md-2 mb-3">
+                    {/* unit */}
+                    <label>Unit</label>
+                    <select
+                      name="unit"
+                      value={formData.unit}
+                      onChange={(e) => {
+                        const selectedUnit = e.target.value;
+                        let mrpValue = "";
+                        setFormData((prev) => ({
+                          ...prev,
+                          unit: selectedUnit,
+                          mrp: mrpValue,
+                        }));
+                      }}
+                      className="form-control"
+                    >
+                      <option value="">Select Unit</option>
+                      <option value="KG">KG</option>
+                      <option value="Pieces">Pieces</option>
+                    </select>
                   </div>
+
+                  {/* MRP */}
+
+                  <div className="col-md-2 mb-3">
+                    <label>MRP</label>
+                    <input
+                      type="number"
+                      name="mrp"
+                      value={formData.mrp}
+                      onChange={handleChange}
+                      className="form-control"
+                    />
+                  </div>
+
+                  {/* Purchase Rate */}
+                  <div className="col-md-2 mb-3">
+                    <label>Purchase Rate</label>
+                    <input
+                      type="number"
+                      name="purchaseRate"
+                      value={formData.purchaseRate}
+                      onChange={handleChange}
+                      className="form-control"
+                    />
+                  </div>
+
+                  {/* sales Rate */}
+                  <div className="col-md-2 mb-3">
+                    <label>Sales Rate</label>
+                    <input
+                      type="number"
+                      name="salesRate"
+                      value={formData.salesRate}
+                      onChange={handleChange}
+                      className="form-control"
+                    />
+                  </div>
+                  {/* ------------------------------------------------------------------------------------- */}
 
                   <div className="col-md-2 mb-3">
                     <label>Available Qty</label>
@@ -251,7 +381,7 @@ const Product = () => {
                       className="form-control"
                     />
                   </div>
-
+                  {/* HSN */}
                   <div className="col-md-3 mb-3">
                     <label>HSN Code</label>
                     <input
@@ -298,12 +428,16 @@ const Product = () => {
                         <th>#</th>
                         <th>Product Name</th>
                         <th>Company</th>
-                        <th>Category</th>
-                        <th>Sub Category</th>
-                        <th>Primary Unit</th>
-                        <th>Primary Price</th>
-                        <th>Secondary Unit</th>
-                        <th>Secondary Price</th>
+                        {/* <th>Category</th> */}
+                        {/* <th>Sub Category</th> */}
+                        {/* <th>Primary Unit</th> */}
+                        {/* <th>Primary Price</th> */}
+                        {/* <th>Secondary Unit</th> */}
+                        {/* <th>Secondary Price</th> */}
+                        <th>Unit</th>
+                        <th>MRP</th>
+                        <th>Purchase Rate</th>
+                        <th>Sales Rate</th>
                         <th>Available Qty</th>
                         <th>HSN Code</th>
                         <th>GST %</th>
@@ -315,22 +449,22 @@ const Product = () => {
                         <tr key={product._id || index}>
                           <td>{index + 1}</td>
                           <td>{product.productName}</td>
-                          <td>
-                            {product.categoryName ||
-                              product.categoryName ||
-                              "N/A"}
-                          </td>
-                          <td>
+                          <td>{product.companyId?.name || "N/A"}</td>
+                          {/* <td>
                             {product.categoryId?.cat || "Unknown Category"}
-                          </td>
-                          <td>
+                          </td> */}
+                          {/* <td>
                             {product.subCategoryId?.subCat ||
                               "Unknown SubCategory"}
-                          </td>
-                          <td>{product.primaryUnit}</td>
-                          <td>₹ {product.primaryPrice}</td>
-                          <td>{product.secondaryUnit}</td>
-                          <td>₹ {product.secondaryPrice}</td>
+                          </td> */}
+                          {/* <td>{product.primaryUnit}</td> */}
+                          {/* <td>₹ {product.primaryPrice}</td> */}
+                          {/* <td>{product.secondaryUnit}</td> */}
+                          {/* <td>₹ {product.secondaryPrice}</td> */}
+                          <td>{product.unit || "-"}</td>
+                          <td>₹ {product.mrp || 0}</td>
+                          <td>₹ {product.purchaseRate || 0}</td>
+                          <td>₹ {product.salesRate || 0}</td>
                           <td>{product.availableQty ?? 0}</td>
                           <td>{product.hsnCode || "-"}</td>
                           <td>{product.gstPercent ?? 9}%</td>

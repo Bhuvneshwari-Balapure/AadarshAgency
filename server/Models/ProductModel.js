@@ -1,22 +1,14 @@
-// models/Product.js
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
   companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
 
-  categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
-  subCategoryId: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory" },
+  productName: { type: String },
 
-  productName: String,
-
-  primaryUnit: String,
-  primaryQty: Number,
-
-  secondaryUnit: String,
-  secondaryQty: Number,
-
-  primaryPrice: Number,
-  secondaryPrice: Number,
+  unit: { type: String }, // New field for Unit dropdown
+  mrp: { type: Number }, // New MRP field
+  salesRate: { type: Number }, // New Sales Rate field
+  purchaseRate: { type: Number }, // New Purchase Rate field
 
   availableQty: {
     type: Number,
@@ -25,10 +17,20 @@ const productSchema = new mongoose.Schema({
       return this.isNew;
     },
   }, // can't edit
-  lastUpdated: { type: Date, default: Date.now },
 
-  hsnCode: String,
-  gstPercent: { type: Number },
+  hsnCode: { type: String },
+  gstPercent: { type: Number, default: 0 },
+
+  lastUpdated: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Product", productSchema);
+
+// categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+// subCategoryId: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory" },
+// primaryUnit: String,
+// primaryQty: Number,
+// secondaryUnit: String,
+// secondaryQty: Number,
+// primaryPrice: Number,
+// secondaryPrice: Number,
