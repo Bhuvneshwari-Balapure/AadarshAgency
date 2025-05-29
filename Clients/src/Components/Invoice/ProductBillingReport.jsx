@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../Config/axios";
 import Select from "react-select";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const defaultRow = {
   product: null,
   Qty: "",
@@ -117,18 +118,33 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
       // }
     }
 
+    // if (field === "Qty" && row.product) {
+    //   const qtyNum = parseFloat(value);
+    //   const prod = row.product;
+    //   if (!isNaN(qtyNum) && qtyNum > 0) {
+    //     if (!isNaN(qtyNum) && qtyNum > 0) {
+    //       row.Rate = prod.mrp; // Always use mrp as rate
+    //     }
+    //     // if (row.Unit === prod.primaryUnit) {
+    //     //   row.Rate = prod.primaryPrice;
+    //     // } else if (row.Unit === prod.secondaryUnit) {
+    //     //   row.Rate = prod.secondaryPrice;
+    //     // }
+    //   }
+    // }
+
     if (field === "Qty" && row.product) {
       const qtyNum = parseFloat(value);
       const prod = row.product;
       if (!isNaN(qtyNum) && qtyNum > 0) {
-        if (!isNaN(qtyNum) && qtyNum > 0) {
-          row.Rate = prod.mrp; // Always use mrp as rate
+        if (qtyNum > prod.availableQty) {
+          toast.error(
+            `Product "${prod.productName}" has only ${prod.availableQty} ${prod.unit} in stock.`,
+            { position: "top-center", autoClose: 3000 }
+          );
+          return; // Stop processing
         }
-        // if (row.Unit === prod.primaryUnit) {
-        //   row.Rate = prod.primaryPrice;
-        // } else if (row.Unit === prod.secondaryUnit) {
-        //   row.Rate = prod.secondaryPrice;
-        // }
+        row.Rate = prod.mrp;
       }
     }
 
@@ -386,6 +402,7 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
           </tbody>
         </table>
       </div>
+      <ToastContainer />
     </div>
   );
 };

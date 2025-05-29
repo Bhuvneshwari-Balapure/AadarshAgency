@@ -10,11 +10,12 @@
     border-bottom: none;
   }
 }
+
 #billing-table table,
 tr,
 td,
 th {
-  background-color: #fae399 !important;
+  background-color: transparent !important;
 }
 #invoice-container {
   margin: 10px 0px;

@@ -14,7 +14,7 @@ const Product = () => {
     mrp: "", // New field
     salesRate: "", // New field
     purchaseRate: "", // New field
-    availableQty: "",
+    availableQty: 0,
     hsnCode: "",
     gstPercent: 0,
     // categoryId: "",
@@ -67,9 +67,18 @@ const Product = () => {
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
+    let processedValue = value;
+
+    if (type === "number" && value !== "") {
+      processedValue = Number(value);
+      // Ensure quantity is never negative
+      if (name === "availableQty" && processedValue < 0) {
+        processedValue = 0;
+      }
+    }
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "number" && value !== "" ? Number(value) : value,
+      [name]: processedValue,
     }));
   };
 
@@ -132,7 +141,7 @@ const Product = () => {
         mrp: formData.mrp,
         salesRate: formData.salesRate,
         purchaseRate: formData.purchaseRate,
-        availableQty: formData.availableQty,
+        availableQty: formData.availableQty || 0,
         hsnCode: formData.hsnCode,
         gstPercent: formData.gstPercent,
         lastUpdated: new Date(),
@@ -157,7 +166,7 @@ const Product = () => {
         mrp: "",
         salesRate: "",
         purchaseRate: "",
-        availableQty: "",
+        availableQty: 0,
         hsnCode: "",
         gstPercent: 9,
       });
@@ -329,7 +338,7 @@ const Product = () => {
                     >
                       <option value="">Select Unit</option>
                       <option value="KG">KG</option>
-                      <option value="Pieces">Pieces</option>
+                      <option value="Pcs">Pcs</option>
                     </select>
                   </div>
 

@@ -1,11 +1,31 @@
 const Purchase = require("../Models/PurchaseModel");
-
+const Product = require("../Models/ProductModel");
 // Create Purchase
+// exports.createPurchase = async (req, res) => {
+//   try {
+//     const newPurchase = new Purchase(req.body);
+//     const saved = await newPurchase.save();
+//     res.status(201).json(saved);
+//   } catch (err) {
+//     res.status(400).json({ error: err.message });
+//   }
+// };
+
 exports.createPurchase = async (req, res) => {
   try {
     const newPurchase = new Purchase(req.body);
-    const saved = await newPurchase.save();
-    res.status(201).json(saved);
+    const savedPurchase = await newPurchase.save();
+
+    // Find the product and update its quantity
+    const product = await Product.findById(savedPurchase.productId);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    product.availableQty = savedPurchase.quantity; // Set quantity on purchase
+    await product.save();
+
+    res.status(201).json(savedPurchase);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

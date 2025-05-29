@@ -435,7 +435,12 @@ const GenerateInvoice = () => {
             </div>
 
             {/* Billing Table */}
-            <Table bordered className="mb-0" id="billing-table">
+            <Table
+              bordered
+              className="mb-0"
+              id="tabling"
+              style={{ backgroundColor: "#FAE399 !important" }}
+            >
               <thead>
                 <tr
                   style={{

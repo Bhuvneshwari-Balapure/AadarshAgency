@@ -47,9 +47,24 @@ const PurchaseForm = () => {
     fetchInitialData();
   }, []);
 
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setPurchaseData((prev) => ({ ...prev, [name]: value }));
+  // };
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setPurchaseData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "productId") {
+      const selectedProduct = products.find((p) => p._id === value);
+      setPurchaseData((prev) => ({
+        ...prev,
+        productId: value,
+        quantity: selectedProduct ? selectedProduct.availableQty : "",
+        purchaseRate: selectedProduct ? selectedProduct.purchaseRate : "",
+      }));
+    } else {
+      setPurchaseData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {

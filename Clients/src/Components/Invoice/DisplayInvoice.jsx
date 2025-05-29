@@ -54,9 +54,27 @@ const DisplayInvoice = () => {
       }}
     >
       <h2 className="mb-4">All Invoices</h2>
-      <Table striped bordered hover responsive>
-        <thead>
-          <tr>
+      <Table
+        striped
+        bordered
+        hover
+        responsive
+        style={{
+          width: "100%",
+          maxHeight: "70vh",
+          overflowY: "auto",
+          display: "block",
+        }}
+      >
+        <thead
+          style={{
+            position: "sticky",
+            top: 0,
+            backgroundColor: "#fff",
+            zIndex: 1,
+          }}
+        >
+          <tr style={{ width: "100%", display: "table", tableLayout: "fixed" }}>
             <th>Company Name</th>
             <th>Date</th>
             <th>Item Purchased</th>
@@ -71,7 +89,7 @@ const DisplayInvoice = () => {
           </tr>
         </thead>
 
-        <tbody>
+        <tbody style={{ display: "table", width: "100%" }}>
           {invoices.map((invoice) => {
             const { customer = {}, billing = [], companyId } = invoice;
 
