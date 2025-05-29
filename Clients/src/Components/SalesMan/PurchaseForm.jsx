@@ -19,11 +19,17 @@ const PurchaseForm = () => {
 
   const [purchaseData, setPurchaseData] = useState({
     vendorId: "",
-    companyId: "",
-    productId: "",
-    purchaseRate: "",
-    quantity: "",
+    item: {
+      productId: "",
+      companyId: "",
+      purchaseRate: "",
+      quantity: "",
+      availableQty: "",
+      totalAmount: "",
+    },
   });
+
+  const [itemsList, setItemsList] = useState([]);
 
   const fetchInitialData = async () => {
     try {
@@ -41,49 +47,93 @@ const PurchaseForm = () => {
       console.error("Error fetching data:", err);
     }
   };
-  console.log(purchases, "Purchases Data");
 
   useEffect(() => {
     fetchInitialData();
   }, []);
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setPurchaseData((prev) => ({ ...prev, [name]: value }));
-  // };
-  const handleChange = (e) => {
+  const handleItemChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "productId") {
-      const selectedProduct = products.find((p) => p._id === value);
-      setPurchaseData((prev) => ({
-        ...prev,
-        productId: value,
-        quantity: selectedProduct ? selectedProduct.availableQty : "",
-        purchaseRate: selectedProduct ? selectedProduct.purchaseRate : "",
-      }));
-    } else {
-      setPurchaseData((prev) => ({ ...prev, [name]: value }));
+    setPurchaseData((prev) => {
+      const updatedItem = { ...prev.item, [name]: value };
+
+      if (name === "productId") {
+        const selectedProduct = products.find((p) => p._id === value);
+        if (selectedProduct) {
+          updatedItem.availableQty = selectedProduct.availableQty;
+          updatedItem.purchaseRate = selectedProduct.purchaseRate;
+          updatedItem.quantity = "";
+          updatedItem.totalAmount = "";
+        }
+      }
+
+      if (name === "quantity" || name === "purchaseRate") {
+        const quantity = name === "quantity" ? value : prev.item.quantity;
+        const rate = name === "purchaseRate" ? value : prev.item.purchaseRate;
+        if (quantity && rate) {
+          updatedItem.totalAmount = parseFloat(quantity) * parseFloat(rate);
+        }
+      }
+
+      return { ...prev, item: updatedItem };
+    });
+  };
+
+  const addItemToList = () => {
+    const { productId, companyId, quantity, purchaseRate } = purchaseData.item;
+    if (!productId || !companyId || !quantity || !purchaseRate) {
+      alert("Please fill all item fields");
+      return;
     }
+
+    setItemsList((prev) => [...prev, purchaseData.item]);
+    setPurchaseData((prev) => ({
+      ...prev,
+      item: {
+        productId: "",
+        companyId: "",
+        purchaseRate: "",
+        quantity: "",
+        availableQty: "",
+        totalAmount: "",
+      },
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!purchaseData.vendorId || itemsList.length === 0) {
+      alert("Please select a vendor and add at least one item");
+      return;
+    }
+
     try {
+      const dataToSend = {
+        vendorId: purchaseData.vendorId,
+        items: itemsList,
+      };
+
       if (editingId) {
-        await axios.put(`/purchase/${editingId}`, purchaseData);
+        await axios.put(`/purchase/${editingId}`, dataToSend);
         alert("Purchase updated successfully");
       } else {
-        await axios.post("/purchase", purchaseData);
+        await axios.post("/purchase", dataToSend);
         alert("Purchase saved successfully");
       }
+
       setPurchaseData({
         vendorId: "",
-        companyId: "",
-        productId: "",
-        purchaseRate: "",
-        quantity: "",
+        item: {
+          productId: "",
+          companyId: "",
+          purchaseRate: "",
+          quantity: "",
+          availableQty: "",
+          totalAmount: "",
+        },
       });
+      setItemsList([]);
       setEditingId(null);
       fetchInitialData();
     } catch (err) {
@@ -94,12 +144,17 @@ const PurchaseForm = () => {
 
   const handleEdit = (purchase) => {
     setPurchaseData({
-      vendorId: purchase.vendorId,
-      companyId: purchase.companyId,
-      productId: purchase.productId,
-      purchaseRate: purchase.purchaseRate,
-      quantity: purchase.quantity,
+      vendorId: purchase.vendorId._id,
+      item: {
+        productId: "",
+        companyId: "",
+        purchaseRate: "",
+        quantity: "",
+        availableQty: "",
+        totalAmount: "",
+      },
     });
+    setItemsList(purchase.items);
     setEditingId(purchase._id);
   };
 
@@ -116,9 +171,19 @@ const PurchaseForm = () => {
     }
   };
 
+  const removeItem = (index) => {
+    setItemsList((prev) => prev.filter((_, i) => i !== index));
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent form submission on Enter
+      addItemToList();
+    }
+  };
+
   return (
-    <Container className="my-4">
-      <Card className="p-4 mb-4">
+    <div className="mx-5">
+      <Card className=" p-4 mb-4">
         <h4 className="mb-3">{editingId ? "Edit Purchase" : "Add Purchase"}</h4>
         <Form onSubmit={handleSubmit}>
           <Row className="mb-3">
@@ -128,7 +193,12 @@ const PurchaseForm = () => {
                 <Form.Select
                   name="vendorId"
                   value={purchaseData.vendorId}
-                  onChange={handleChange}
+                  onChange={(e) =>
+                    setPurchaseData((prev) => ({
+                      ...prev,
+                      vendorId: e.target.value,
+                    }))
+                  }
                 >
                   <option value="">Select Vendor</option>
                   {vendors.map((v) => (
@@ -139,33 +209,26 @@ const PurchaseForm = () => {
                 </Form.Select>
               </Form.Group>
             </Col>
+          </Row>
+          <Row className="mt-3">
             <Col md={6}>
-              <Form.Group>
-                <Form.Label>Company</Form.Label>
-                <Form.Select
-                  name="companyId"
-                  value={purchaseData.companyId}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Company</option>
-                  {companies.map((c) => (
-                    <option key={c._id} value={c._id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
+              <p>
+                <strong>Add More Items : </strong>{" "}
+                <span style={{ color: "gray" }}>press Enter</span>
+              </p>
             </Col>
           </Row>
 
           <Row className="mb-3">
-            <Col md={6}>
+            <Col md={2}>
               <Form.Group>
                 <Form.Label>Product</Form.Label>
                 <Form.Select
                   name="productId"
-                  value={purchaseData.productId}
-                  onChange={handleChange}
+                  value={purchaseData.item.productId}
+                  onChange={handleItemChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Enter Product"
                 >
                   <option value="">Select Product</option>
                   {products.map((p) => (
@@ -176,31 +239,124 @@ const PurchaseForm = () => {
                 </Form.Select>
               </Form.Group>
             </Col>
-            <Col md={3}>
+            <Col md={2}>
               <Form.Group>
-                <Form.Label>Purchase Rate</Form.Label>
+                <Form.Label>Company</Form.Label>
+                <Form.Select
+                  name="companyId"
+                  value={purchaseData.item.companyId}
+                  onChange={handleItemChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Enter Company"
+                >
+                  <option value="">Select Company</option>
+                  {companies.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={2}>
+              <Form.Group>
+                <Form.Label>Rate</Form.Label>
                 <Form.Control
                   type="number"
                   name="purchaseRate"
-                  value={purchaseData.purchaseRate}
-                  onChange={handleChange}
+                  value={purchaseData.item.purchaseRate}
+                  onChange={handleItemChange}
+                  onKeyDown={handleKeyDown}
                 />
               </Form.Group>
             </Col>
-            <Col md={3}>
+            <Col md={2}>
               <Form.Group>
-                <Form.Label>Quantity</Form.Label>
+                <Form.Label>Qty</Form.Label>
                 <Form.Control
                   type="number"
                   name="quantity"
-                  value={purchaseData.quantity}
-                  onChange={handleChange}
+                  value={purchaseData.item.quantity}
+                  onChange={handleItemChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Enter Qty"
                 />
               </Form.Group>
             </Col>
+
+            <Col md={2}>
+              <Form.Group>
+                <Form.Label>Available Qty</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="availableQty"
+                  value={purchaseData.item.availableQty}
+                  readOnly
+                />
+              </Form.Group>
+            </Col>
+            <Col md={2}>
+              <Form.Group>
+                <Form.Label>Total</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="totalAmount"
+                  value={purchaseData.item.totalAmount}
+                  readOnly
+                />
+              </Form.Group>
+            </Col>
+            {/* <Col md={2} className="d-flex align-items-end">
+              <Button variant="info" onClick={addItemToList}>
+                Add Item
+              </Button>
+            </Col> */}
           </Row>
 
-          <Button type="submit" variant={editingId ? "warning" : "primary"}>
+          {itemsList.length > 0 && (
+            <Table striped bordered className="mt-3">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Company</th>
+                  <th>Rate</th>
+                  <th>Qty</th>
+                  <th>Total</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {itemsList.map((item, index) => {
+                  const product = products.find(
+                    (p) => p._id === item.productId
+                  );
+                  const company = companies.find(
+                    (c) => c._id === item.companyId
+                  );
+                  return (
+                    <tr key={index}>
+                      <td>{product?.productName}</td>
+                      <td>{company?.name}</td>
+                      <td>{item.purchaseRate}</td>
+                      <td>{item.quantity}</td>
+                      <td>{item.totalAmount}</td>
+                      <td>
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => removeItem(index)}
+                        >
+                          Remove
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          )}
+
+          <Button type="submit" className="mt-3" variant="primary">
             {editingId ? "Update Purchase" : "Save Purchase"}
           </Button>
         </Form>
@@ -208,14 +364,14 @@ const PurchaseForm = () => {
 
       <Card className="p-3">
         <h5>Purchase List</h5>
-        <Table striped bordered hover>
+        <Table striped bordered>
           <thead>
             <tr>
               <th>Vendor</th>
-              <th>Company</th>
-              <th>Product</th>
-              <th>Rate</th>
-              <th>Qty</th>
+              <th>Items Count</th>
+              <th>Item Quantity</th>
+              <th>Item Rate</th>
+              <th>Total Amount</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -223,10 +379,10 @@ const PurchaseForm = () => {
             {purchases.map((p) => (
               <tr key={p._id}>
                 <td>{p.vendorId?.name}</td>
-                <td>{p.companyId?.name}</td>
-                <td>{p.productId?.productName}</td>
-                <td>{p.purchaseRate}</td>
-                <td>{p.quantity}</td>
+                <td>{p.items.length}</td>
+                <td>{p.items.reduce((sum, i) => sum + i.quantity, 0)}</td>
+                <td>{p.items.reduce((sum, i) => sum + i.purchaseRate, 0)}</td>
+                <td>{p.items.reduce((sum, i) => sum + i.totalAmount, 0)}</td>
                 <td>
                   <Button
                     variant="outline-secondary"
@@ -248,7 +404,7 @@ const PurchaseForm = () => {
           </tbody>
         </Table>
       </Card>
-    </Container>
+    </div>
   );
 };
 
