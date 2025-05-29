@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Container, Table, Image, Button } from "react-bootstrap";
 import axios from "../../Config/axios";
 
+const API_BASE = import.meta.env.VITE_API;
+const IMAGE_BASE = API_BASE.replace(/\/api$/, "");
+
 function DisplaySalesMan() {
   const [salesmen, setSalesmen] = useState(null);
 
@@ -12,13 +15,11 @@ function DisplaySalesMan() {
   const fetchSalesmen = async () => {
     try {
       const response = await axios.get("/salesman");
-      console.log(response);
       setSalesmen(response.data);
     } catch (error) {
       console.error("Error fetching salesmen:", error);
     }
   };
-  console.log(salesmen, "hfdlsk");
 
   const handleDelete = (id) => {
     console.log(id);
@@ -47,7 +48,7 @@ function DisplaySalesMan() {
                 <td>
                   {s.photo ? (
                     <Image
-                      src={`http://localhost:8080/Images/${s.photo}`}
+                      src={`${IMAGE_BASE}/Images/${s.photo}`}
                       roundedCircle
                       width={50}
                       height={50}
