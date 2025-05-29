@@ -26,6 +26,7 @@ const AppRoutes = () => {
         <Route path="/pro-SubCat" element={<SubCatDetail />} />
         <Route path="/product" element={<Product />} />
         <Route path="/add-salesman" element={<AddSalesMan />} />
+        <Route path="/add-salesman/:id" element={<AddSalesMan />} />
         <Route path="/display-salesman" element={<DisplaySalesMan />} />
         <Route path="/add-invoice" element={<BillingReport />} />
         <Route path="/generate-invoice" element={<GenerateInvoice />} />

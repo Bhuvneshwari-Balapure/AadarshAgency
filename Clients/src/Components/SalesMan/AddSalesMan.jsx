@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import axios from "../../Config/axios";
 import { useNavigate, useParams } from "react-router-dom";
+const IMAGE_BASE = import.meta.env.VITE_API.replace(/\/api$/, "");
 
 function AddSalesMan() {
   const [formData, setFormData] = useState({
@@ -20,6 +21,7 @@ function AddSalesMan() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [existingPhoto, setExistingPhoto] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -35,8 +37,9 @@ function AddSalesMan() {
           address: s.address || "",
           alternateMobile: s.alternateMobile || "",
           username: s.username || "",
-          password: "", // Keep blank or use placeholder
+          password: s.password || "", // pre-fill password (only if you store plaintext, which is not secure)
         });
+        setExistingPhoto(s.photo); // Set image
       });
     }
   }, [id]);
@@ -51,41 +54,6 @@ function AddSalesMan() {
   const handlePhotoChange = (e) => {
     setPhoto(e.target.files[0]);
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   const data = new FormData();
-  //   Object.entries(formData).forEach(([key, value]) => {
-  //     data.append(key, value);
-  //   });
-  //   if (photo) {
-  //     data.append("photo", photo);
-  //   }
-
-  //   try {
-  //     const response = await axios.post("/salesman", data, {
-  //       headers: { "Content-Type": "multipart/form-data" },
-  //     });
-  //     console.log(response);
-  //     alert("Salesman saved successfully!");
-  //     setFormData({
-  //       name: "",
-  //       designation: "",
-  //       mobile: "",
-  //       email: "",
-  //       city: "",
-  //       address: "",
-  //       alternateMobile: "",
-  //       username: "",
-  //       password: "",
-  //     });
-  //     setPhoto(null);
-  //   } catch (err) {
-  //     console.error("Error saving salesman:", err);
-  //     alert("Error saving salesman.");
-  //   }
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -216,6 +184,19 @@ function AddSalesMan() {
             <Form.Group className="mb-3">
               <Form.Label>Photo</Form.Label>
               <Form.Control type="file" onChange={handlePhotoChange} />
+              {isEditing && existingPhoto && (
+                <div className="mt-2">
+                  <img
+                    src={`${IMAGE_BASE}/Images/${existingPhoto}`}
+                    alt="Salesman"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+              )}
             </Form.Group>
           </Col>
           <Col md={6}>
