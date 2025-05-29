@@ -51,8 +51,50 @@ const Display = async (req, res) => {
       .json({ message: "Failed to fetch Data", error: error.message });
   }
 };
+const updateSalesman = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    if (req.file) {
+      updatedData.photo = req.file.filename;
+    }
+
+    const updatedSalesman = await Salesman.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+
+    if (!updatedSalesman) {
+      return res.status(404).json({ message: "Salesman not found" });
+    }
+
+    res.status(200).json({
+      message: "Salesman updated successfully",
+      salesman: updatedSalesman,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const deleteSalesman = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Salesman.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Salesman not found" });
+    }
+
+    res.status(200).json({ message: "Salesman deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 module.exports = {
   createSalesman,
   Display,
+  updateSalesman,
+  deleteSalesman,
 };

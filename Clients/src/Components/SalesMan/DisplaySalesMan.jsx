@@ -21,8 +21,15 @@ function DisplaySalesMan() {
     }
   };
 
-  const handleDelete = (id) => {
-    console.log(id);
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this salesman?")) {
+      try {
+        await axios.delete(`/salesman/${id}`);
+        fetchSalesmen(); // Refresh the list
+      } catch (error) {
+        console.error("Error deleting salesman:", error);
+      }
+    }
   };
 
   return (
