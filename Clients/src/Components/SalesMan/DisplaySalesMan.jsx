@@ -3,7 +3,7 @@ import { Container, Table, Image, Button } from "react-bootstrap";
 import axios from "../../Config/axios";
 
 const API_BASE = import.meta.env.VITE_API;
-const IMAGE_BASE = API_BASE.replace(/\/api$/, "");
+const IMAGE_BASE = import.meta.env.VITE_API.replace(/\/api$/, "");
 
 function DisplaySalesMan() {
   const [salesmen, setSalesmen] = useState(null);
