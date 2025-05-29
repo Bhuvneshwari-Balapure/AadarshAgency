@@ -347,6 +347,7 @@ const GenerateInvoice = () => {
       style={{
         backgroundColor: "#fae399",
         padding: "5px",
+        margin: "0 auto",
       }}
     >
       {billingChunks.map((chunk, pageIndex) => (
