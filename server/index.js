@@ -29,8 +29,8 @@ mongoose
 
 // ---------Routes----------
 
-// app.use(express.static(path.join(__dirname, "public")));
-app.use("/Images", express.static(path.join(__dirname, "public/Images")));
+app.use(express.static(path.join(__dirname, "public")));
+// app.use("public", express.static(path.join(__dirname, "public/Images")));
 
 // app.use("/admin", adminRoute);
 app.use("/api/company", companyRoute);
