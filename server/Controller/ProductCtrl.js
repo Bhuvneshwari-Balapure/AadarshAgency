@@ -107,6 +107,7 @@ const UpdateProductQuantity = async (req, res) => {
 const updateProduct = async (req, res) => {
   const { id } = req.params;
   const {
+    companyId,
     productName,
     unit,
     mrp,
@@ -120,6 +121,7 @@ const updateProduct = async (req, res) => {
   try {
     // Validation
     if (
+      !companyId ||
       !productName ||
       !unit ||
       mrp === "" ||
@@ -137,6 +139,7 @@ const updateProduct = async (req, res) => {
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
       {
+        companyId,
         productName,
         unit,
         mrp,
