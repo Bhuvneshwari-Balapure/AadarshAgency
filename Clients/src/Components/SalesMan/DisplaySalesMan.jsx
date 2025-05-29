@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Table, Image, Button } from "react-bootstrap";
 import axios from "../../Config/axios";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_API;
 const IMAGE_BASE = import.meta.env.VITE_API.replace(/\/api$/, "");
@@ -19,6 +20,11 @@ function DisplaySalesMan() {
     } catch (error) {
       console.error("Error fetching salesmen:", error);
     }
+  };
+  const navigate = useNavigate();
+
+  const handleEdit = (id) => {
+    navigate(`/add-salesman/${id}`);
   };
 
   const handleDelete = async (id) => {
@@ -72,7 +78,11 @@ function DisplaySalesMan() {
                 <td>{s.username}</td>
                 <td>
                   <div className="btn-group" role="group">
-                    <Button variant="link" className="text-primary">
+                    <Button
+                      variant="link"
+                      className="text-primary"
+                      onClick={() => handleEdit(s._id)}
+                    >
                       Edit
                     </Button>
                     <Button

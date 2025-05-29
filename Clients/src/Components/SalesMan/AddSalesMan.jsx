@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import axios from "../../Config/axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 function AddSalesMan() {
   const [formData, setFormData] = useState({
@@ -15,6 +16,31 @@ function AddSalesMan() {
     password: "",
   });
 
+  // update
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      setIsEditing(true);
+      axios.get(`/salesman/${id}`).then((res) => {
+        const s = res.data;
+        setFormData({
+          name: s.name || "",
+          designation: s.designation || "",
+          mobile: s.mobile || "",
+          email: s.email || "",
+          city: s.city || "",
+          address: s.address || "",
+          alternateMobile: s.alternateMobile || "",
+          username: s.username || "",
+          password: "", // Keep blank or use placeholder
+        });
+      });
+    }
+  }, [id]);
+
   const [photo, setPhoto] = useState(null);
 
   const handleChange = (e) => {
@@ -26,6 +52,41 @@ function AddSalesMan() {
     setPhoto(e.target.files[0]);
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   const data = new FormData();
+  //   Object.entries(formData).forEach(([key, value]) => {
+  //     data.append(key, value);
+  //   });
+  //   if (photo) {
+  //     data.append("photo", photo);
+  //   }
+
+  //   try {
+  //     const response = await axios.post("/salesman", data, {
+  //       headers: { "Content-Type": "multipart/form-data" },
+  //     });
+  //     console.log(response);
+  //     alert("Salesman saved successfully!");
+  //     setFormData({
+  //       name: "",
+  //       designation: "",
+  //       mobile: "",
+  //       email: "",
+  //       city: "",
+  //       address: "",
+  //       alternateMobile: "",
+  //       username: "",
+  //       password: "",
+  //     });
+  //     setPhoto(null);
+  //   } catch (err) {
+  //     console.error("Error saving salesman:", err);
+  //     alert("Error saving salesman.");
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,16 +94,21 @@ function AddSalesMan() {
     Object.entries(formData).forEach(([key, value]) => {
       data.append(key, value);
     });
-    if (photo) {
-      data.append("photo", photo);
-    }
+    if (photo) data.append("photo", photo);
 
     try {
-      const response = await axios.post("/salesman", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      console.log(response);
-      alert("Salesman saved successfully!");
+      if (isEditing) {
+        await axios.put(`/salesman/${id}`, data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        alert("Salesman updated successfully!");
+      } else {
+        await axios.post("/salesman", data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        alert("Salesman saved successfully!");
+      }
+
       setFormData({
         name: "",
         designation: "",
@@ -55,6 +121,7 @@ function AddSalesMan() {
         password: "",
       });
       setPhoto(null);
+      navigate("/display-salesman");
     } catch (err) {
       console.error("Error saving salesman:", err);
       alert("Error saving salesman.");

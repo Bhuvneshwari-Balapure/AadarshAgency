@@ -51,6 +51,19 @@ const Display = async (req, res) => {
       .json({ message: "Failed to fetch Data", error: error.message });
   }
 };
+const getSingleSalesman = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const salesman = await Salesman.findById(id);
+    if (!salesman) {
+      return res.status(404).json({ message: "Salesman not found" });
+    }
+    res.status(200).json(salesman);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 const updateSalesman = async (req, res) => {
   try {
     const { id } = req.params;
@@ -95,6 +108,7 @@ const deleteSalesman = async (req, res) => {
 module.exports = {
   createSalesman,
   Display,
+  getSingleSalesman,
   updateSalesman,
   deleteSalesman,
 };
