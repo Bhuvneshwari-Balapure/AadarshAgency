@@ -13,7 +13,7 @@ function CustomerDetail() {
       const res = await axios.get("/customer");
       setCustomers(res.data);
     } catch (err) {
-      toast.error("Failed to fetch customers");
+      // toast.error("Failed to fetch customers");
       console.error(err);
     }
   };

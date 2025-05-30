@@ -6,19 +6,19 @@ import Select from "react-select";
 const CustomerBilling = ({ onDataChange }) => {
   // fetch company name to dispalya in drop down
 
-  const [companies, setCompanies] = useState([]);
+  const [customer, setcustomer] = useState([]);
 
-  // selected Company
-  const [selectedCompany, setSelectedCompany] = useState(null);
+  // selected Customer
+  const [selectedCustomer, setselectedCustomer] = useState(null);
 
-  const fetchCompanies = async () => {
+  const fetchcustomer = async () => {
     try {
-      const res = await axios.get("/company");
+      const res = await axios.get("/customer");
       console.log(res.data);
-      setCompanies(res.data);
+      setcustomer(res.data);
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch companies");
+      alert("Failed to fetch customer");
     }
   };
 
@@ -40,7 +40,7 @@ const CustomerBilling = ({ onDataChange }) => {
   console.log(salesmen, "sales man");
 
   useEffect(() => {
-    fetchCompanies();
+    fetchcustomer();
     fetchSalesmen();
   }, []);
 
@@ -51,7 +51,7 @@ const CustomerBilling = ({ onDataChange }) => {
     advanceAmt: "",
     paymentMode: "",
   });
-  console.log(companies, "ghfhj");
+  console.log(customer, "ghfhj");
 
   //   const handleChange = (e) => {
   //     const { name, value } = e.target;
@@ -80,10 +80,10 @@ const CustomerBilling = ({ onDataChange }) => {
     };
     setFormData(updatedForm);
 
-    // Include selectedCompany._id if selected
+    // Include selectedCustomer._id if selected
     onDataChange({
       ...updatedForm,
-      companyId: selectedCompany?._id || null,
+      customerId: selectedCustomer?._id || null,
     });
   };
 
@@ -102,34 +102,34 @@ const CustomerBilling = ({ onDataChange }) => {
           <div className="form-group col-md-6">
             <div className="form-group col-md-6">
               <label className="form-label">
-                <strong>Select Brand</strong>
+                <strong>Select Customer</strong>
               </label>
               <Select
-                options={companies.map((company) => ({
-                  label: company.name,
-                  value: company._id,
+                options={customer.map((customer) => ({
+                  label: customer.name,
+                  value: customer._id,
                 }))}
                 value={
-                  selectedCompany
+                  selectedCustomer
                     ? {
-                        label: selectedCompany.name,
-                        value: selectedCompany._id,
+                        label: selectedCustomer.name,
+                        value: selectedCustomer._id,
                       }
                     : null
                 }
                 onChange={(selectedOption) => {
-                  const companyObj = companies.find(
+                  const customerObj = customer.find(
                     (c) => c._id === selectedOption.value
                   );
-                  setSelectedCompany(companyObj);
+                  setselectedCustomer(customerObj);
 
-                  // Pass the company ID along with the customer form data to parent
+                  // Pass the customer ID along with the customer form data to parent
                   onDataChange({
                     ...formData,
-                    companyId: companyObj._id,
+                    customerId: customerObj._id,
                   });
                 }}
-                placeholder="Select a company..."
+                placeholder="Select a Customer..."
                 menuPortalTarget={document.body}
                 styles={{
                   menuPortal: (base) => ({ ...base, zIndex: 9999 }),
@@ -195,7 +195,7 @@ const CustomerBilling = ({ onDataChange }) => {
                 setFormData(updatedForm);
                 onDataChange({
                   ...updatedForm,
-                  companyId: selectedCompany?._id || null,
+                  companyId: selectedCustomer?._id || null,
                 });
               }}
             >

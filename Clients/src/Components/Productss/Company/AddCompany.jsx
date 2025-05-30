@@ -35,7 +35,7 @@ const AddCompany = () => {
       const res = await axios.post("/company", formData);
       console.log(res.data);
       setSubmitSuccess(true);
-      alert("Company created successfully!");
+      alert("Brand created successfully!");
       // Optionally reset form
       setFormData({
         name: "",
@@ -51,7 +51,7 @@ const AddCompany = () => {
       });
     } catch (error) {
       console.error(error);
-      alert("Failed to create company");
+      alert("Failed to create Brand");
     } finally {
       setIsSubmitting(false);
     }

@@ -54,20 +54,53 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
   }, []);
 
   // Calculate amount including GST
+  // const calculateAmountWithGST = (total, qty, gstPercent) => {
+  //   const t = parseFloat(total);
+  //   const q = parseFloat(qty);
+  //   const gst = parseFloat(gstPercent);
+
+  //   if (isNaN(t) || isNaN(q)) return 0;
+  //   if (isNaN(gst) || gst <= 0) return t * q;
+
+  //   // Correct GST calculation: total + (gst% of total)
+  //   const gstAmount = t + gst / 100;
+  //   return gstAmount * q;
+  // };
   const calculateAmountWithGST = (total, qty, gstPercent) => {
     const t = parseFloat(total);
     const q = parseFloat(qty);
     const gst = parseFloat(gstPercent);
 
     if (isNaN(t) || isNaN(q)) return 0;
-    if (isNaN(gst) || gst <= 0) return t * q;
-
-    // Correct GST calculation: total + (gst% of total)
-    const gstAmount = t + gst / 100;
-    return gstAmount * q;
+    const subtotal = t * q;
+    const gstAmount = subtotal * (gst / 100);
+    return subtotal + gstAmount;
   };
 
   // Recalculate derived fields for a row
+  // const recalculateRow = (row) => {
+  //   const rate = parseFloat(row.Rate) || 0;
+  //   const schPercent = parseFloat(row.Sch) || 0;
+  //   const cdPercent = parseFloat(row.CD) || 0;
+  //   const qty = parseFloat(row.Qty) || 0;
+  //   const gstPercent = parseFloat(row.GST) || 0;
+
+  //   const schAmt = (rate * schPercent) / 100;
+  //   const cdAmt = (rate * cdPercent) / 100;
+
+  //   // Your requested formula:
+  //   const total = rate - schAmt - cdAmt;
+
+  //   const amount = calculateAmountWithGST(total, qty, gstPercent);
+
+  //   return {
+  //     ...row,
+  //     SchAmt: schAmt.toFixed(2),
+  //     CDAmt: cdAmt.toFixed(2),
+  //     Total: total.toFixed(2),
+  //     Amount: amount.toFixed(2),
+  //   };
+  // };
   const recalculateRow = (row) => {
     const rate = parseFloat(row.Rate) || 0;
     const schPercent = parseFloat(row.Sch) || 0;
@@ -78,9 +111,7 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
     const schAmt = (rate * schPercent) / 100;
     const cdAmt = (rate * cdPercent) / 100;
 
-    // Your requested formula:
     const total = rate - schAmt - cdAmt;
-
     const amount = calculateAmountWithGST(total, qty, gstPercent);
 
     return {
@@ -99,8 +130,8 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
     if (field === "product") {
       row.product = value;
       row.GST = value.gstPercent || "";
-      row.Unit = value.unit || ""; // Single unit field
-      row.Rate = value.mrp || ""; // Use mrp directly
+      row.Unit = value.unit || "";
+      row.Rate = value.salesRate || ""; // ✅ Always set salesRate
       // row.Unit = value.primaryUnit || "";
       // row.Rate = value.primaryPrice || "";
     }

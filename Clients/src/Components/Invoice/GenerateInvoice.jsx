@@ -404,13 +404,13 @@ const GenerateInvoice = () => {
                   boxSizing: "border-box",
                 }}
               >
-                <strong>To:</strong> {companyId.name || "N/A"}
+                <strong>To:</strong> {customer?.CustomerName || "N/A"}
                 <br />
-                {companyId.address || "N/A"}
+                {customer.address || "N/A"}
                 <br />
-                <strong>GSTIN:</strong> {companyId.gstNumber || "N/A"}
+                <strong>GSTIN:</strong> {customer.gstNumber || "N/A"}
                 <br />
-                <strong>number:</strong> {companyId.mobile || "N/A"}
+                <strong>number:</strong> {customer.mobile || "N/A"}
               </div>
 
               {/* Right box */}
