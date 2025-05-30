@@ -61,7 +61,7 @@ const AddCompany = () => {
     <div className="">
       <div className="card shadow-lg">
         <div className="card-header bg-primary text-white">
-          <h3 className="card-title">Create Company</h3>
+          <h3 className="card-title">Create Brand</h3>
           <div className="card-tools">
             <button
               type="button"
@@ -78,11 +78,11 @@ const AddCompany = () => {
             <div className="row">
               <div className="col-md-4">
                 <div className="form-group">
-                  <label className="font-weight-bold">Company Name</label>
+                  <label className="font-weight-bold">Brand Name</label>
                   <input
                     name="name"
                     className="form-control"
-                    placeholder="Company Name"
+                    placeholder="Brand Name"
                     value={formData.name}
                     onChange={handleChange}
                   />

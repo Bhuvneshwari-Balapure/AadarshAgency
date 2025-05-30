@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Company = require("../Models/CompanyModel");
 
-// ➕ Create a new company
+// ➕ Create a new Company
 router.post("/", async (req, res) => {
   try {
     const newCompany = new Company(req.body);
@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// 📄 Get all companies
+// 📄 Get all Companys
 router.get("/", async (req, res) => {
   try {
     const companies = await Company.find();
@@ -23,18 +23,18 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 📄 Get a company by ID
+// 📄 Get a Company by ID
 router.get("/:id", async (req, res) => {
   try {
-    const company = await Company.findById(req.params.id);
-    if (!company) return res.status(404).json({ error: "Company not found" });
-    res.json(company);
+    const Company = await Company.findById(req.params.id);
+    if (!Company) return res.status(404).json({ error: "Company not found" });
+    res.json(Company);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// ✏️ Update a company by ID
+// ✏️ Update a Company by ID
 router.put("/:id", async (req, res) => {
   try {
     const updatedCompany = await Company.findByIdAndUpdate(
@@ -50,7 +50,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ❌ Delete a company by ID
+// ❌ Delete a Company by ID
 router.delete("/:id", async (req, res) => {
   try {
     const deletedCompany = await Company.findByIdAndDelete(req.params.id);

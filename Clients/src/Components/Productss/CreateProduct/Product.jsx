@@ -205,16 +205,16 @@ const Product = () => {
               </h5>
               <form onSubmit={handleSubmit}>
                 <div className="row">
-                  {/* Company */}
+                  {/* Brand */}
                   <div className="col-md-4 mb-3">
-                    <label>Company</label>
+                    <label>Brand</label>
                     <select
                       name="companyId"
                       value={formData.companyId}
                       onChange={handleChange}
                       className="form-control"
                     >
-                      <option value="">Select Company</option>
+                      <option value="">Select Brand</option>
                       {companies.map((c) => (
                         <option key={c._id} value={c._id}>
                           {c.name}
@@ -436,7 +436,7 @@ const Product = () => {
                       <tr>
                         <th>#</th>
                         <th>Product Name</th>
-                        <th>Company</th>
+                        <th>Brand</th>
                         {/* <th>Category</th> */}
                         {/* <th>Sub Category</th> */}
                         {/* <th>Primary Unit</th> */}

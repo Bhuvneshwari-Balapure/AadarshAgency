@@ -142,21 +142,21 @@ const PurchaseForm = () => {
     }
   };
 
-  const handleEdit = (purchase) => {
-    setPurchaseData({
-      vendorId: purchase.vendorId._id,
-      item: {
-        productId: "",
-        companyId: "",
-        purchaseRate: "",
-        quantity: "",
-        availableQty: "",
-        totalAmount: "",
-      },
-    });
-    setItemsList(purchase.items);
-    setEditingId(purchase._id);
-  };
+  // const handleEdit = (purchase) => {
+  //   setPurchaseData({
+  //     vendorId: purchase.vendorId._id,
+  //     item: {
+  //       productId: "",
+  //       companyId: "",
+  //       purchaseRate: "",
+  //       quantity: "",
+  //       availableQty: "",
+  //       totalAmount: "",
+  //     },
+  //   });
+  //   setItemsList(purchase.items);
+  //   setEditingId(purchase._id);
+  // };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this purchase?")) {
@@ -222,6 +222,25 @@ const PurchaseForm = () => {
           <Row className="mb-3">
             <Col md={2}>
               <Form.Group>
+                <Form.Label>Brand</Form.Label>
+                <Form.Select
+                  name="companyId"
+                  value={purchaseData.item.companyId}
+                  onChange={handleItemChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Enter Brand"
+                >
+                  <option value="">Select Company</option>
+                  {companies.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={2}>
+              <Form.Group>
                 <Form.Label>Product</Form.Label>
                 <Form.Select
                   name="productId"
@@ -239,25 +258,7 @@ const PurchaseForm = () => {
                 </Form.Select>
               </Form.Group>
             </Col>
-            <Col md={2}>
-              <Form.Group>
-                <Form.Label>Company</Form.Label>
-                <Form.Select
-                  name="companyId"
-                  value={purchaseData.item.companyId}
-                  onChange={handleItemChange}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Enter Company"
-                >
-                  <option value="">Select Company</option>
-                  {companies.map((c) => (
-                    <option key={c._id} value={c._id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </Col>
+
             <Col md={2}>
               <Form.Group>
                 <Form.Label>Rate</Form.Label>
@@ -384,13 +385,13 @@ const PurchaseForm = () => {
                 <td>{p.items.reduce((sum, i) => sum + i.purchaseRate, 0)}</td>
                 <td>{p.items.reduce((sum, i) => sum + i.totalAmount, 0)}</td>
                 <td>
-                  <Button
+                  {/* <Button
                     variant="outline-secondary"
                     size="sm"
                     onClick={() => handleEdit(p)}
                   >
                     Edit
-                  </Button>{" "}
+                  </Button>{" "} */}
                   <Button
                     variant="outline-danger"
                     size="sm"

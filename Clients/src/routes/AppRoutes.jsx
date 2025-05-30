@@ -15,13 +15,14 @@ import DisplayInvoice from "../Components/Invoice/DisplayInvoice";
 import GenerateInvoice from "../Components/Invoice/GenerateInvoice";
 import VendorReport from "../Components/SalesMan/VendorReport";
 import PurchaseForm from "../Components/SalesMan/PurchaseForm";
+import CustomerDetail from "../Components/Customer/CustomerDetail";
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<DashboardCards />} />
-        <Route path="/company" element={<CompanyDetail />} />
+        <Route path="/brand" element={<CompanyDetail />} />
         <Route path="/pro-categories" element={<CategoryDetail />} />
         <Route path="/pro-SubCat" element={<SubCatDetail />} />
         <Route path="/product" element={<Product />} />
@@ -34,6 +35,7 @@ const AppRoutes = () => {
         <Route path="/generate-invoice/:id" element={<GenerateInvoice />} />
         <Route path="/Vendor-report" element={<VendorReport />} />
         <Route path="/purchase" element={<PurchaseForm />} />
+        <Route path="/add-customer" element={<CustomerDetail />} />
       </Route>
     </Routes>
   );

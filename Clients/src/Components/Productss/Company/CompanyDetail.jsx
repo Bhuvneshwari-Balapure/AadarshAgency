@@ -112,7 +112,7 @@ const CompanyDetail = () => {
 
   return (
     <div className="container mt-2 mb-4">
-      <h4>Create Company</h4>
+      <h4>Create Brand</h4>
       <div className="row">
         <div className="col-md-12">
           <div className="card card-primary card-outline">
@@ -123,8 +123,8 @@ const CompanyDetail = () => {
                 onSelect={(k) => setActiveTab(k)}
                 className="mb-3"
               >
-                <Tab eventKey="view" title={<b>View Company</b>} />
-                <Tab eventKey="add" title={<b>Add Company</b>} />
+                <Tab eventKey="view" title={<b>View Brand</b>} />
+                <Tab eventKey="add" title={<b>Add Brand</b>} />
               </Tabs>
             </div>
 
@@ -146,7 +146,7 @@ const CompanyDetail = () => {
                   <Table striped bordered hover responsive>
                     <thead>
                       <tr>
-                        <th>Company</th>
+                        <th>Brand Name</th>
                         <th>Contact Person</th>
                         <th>Designation</th>
                         <th>City</th>
@@ -162,6 +162,7 @@ const CompanyDetail = () => {
                     <tbody>
                       {companies.map((c) => (
                         <tr key={c._id}>
+                          {/* company name */}
                           <td>{c.name}</td>
                           <td>{c.contactPerson}</td>
                           <td>{c.designation}</td>

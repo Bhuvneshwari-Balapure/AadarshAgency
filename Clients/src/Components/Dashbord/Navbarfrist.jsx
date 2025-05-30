@@ -51,22 +51,29 @@ const Navbarfristn = () => {
                 <span className="nav-text">Dashboard</span>
               </Nav.Link>
 
-              {/* product */}
+              {/* Master */}
               <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
                 <Dropdown.Toggle as={Nav.Link}>
                   <FiLayers className="nav-icon" />
-                  Product <FiChevronDown size={12} className="ms-1" />
+                  Master <FiChevronDown size={12} className="ms-1" />
                 </Dropdown.Toggle>
                 <Dropdown.Menu
                   className="custom-dropdown p-4"
-                  style={{ minWidth: "600px" }}
+                  style={{ minWidth: "500px" }}
                 >
                   <div className="row">
-                    {/* Company */}
+                    {/* Brand */}
                     <div className="col-md-4">
-                      <Dropdown.Item as={Link} to="/company">
-                        Add Company
+                      <Dropdown.Item as={Link} to="/brand">
+                        Add Brand
                       </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/product">
+                        Create Product
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/Vendor-report">
+                        Vendor Report
+                      </Dropdown.Item>
+
                       {/* <Dropdown.Item as={Link} to="/pro-categories">
                         Product Category
                       </Dropdown.Item>
@@ -77,8 +84,15 @@ const Navbarfristn = () => {
 
                     {/* Product Master */}
                     <div className="col-md-4">
-                      <Dropdown.Item as={Link} to="/product">
-                        Create Product
+                      <Dropdown.Item as={Link} to="/add-customer">
+                        Add Customer
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/add-salesman">
+                        Add Sales Man
+                      </Dropdown.Item>
+
+                      <Dropdown.Item as={Link} to="/display-salesman">
+                        Display Sales Man
                       </Dropdown.Item>
                       {/* <Dropdown.Item as={Link} to="/display-billing-report">
                         Product Billing Report
@@ -88,30 +102,18 @@ const Navbarfristn = () => {
                 </Dropdown.Menu>
               </Dropdown>
 
-              {/* SalesMan */}
+              {/* Purchasing */}
               <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
                 <Dropdown.Toggle as={Nav.Link}>
                   <FiLayers className="nav-icon" />
-                  Sales Man <FiChevronDown size={12} className="ms-1" />
+                  Purchasing <FiChevronDown size={12} className="ms-1" />
                 </Dropdown.Toggle>
                 <Dropdown.Menu
                   className="custom-dropdown p-4"
-                  style={{ minWidth: "600px" }}
+                  style={{ minWidth: "200px" }}
                 >
                   <div className="row">
                     <div className="col-md-4">
-                      <Dropdown.Item as={Link} to="/add-salesman">
-                        Add Sales Man
-                      </Dropdown.Item>
-
-                      <Dropdown.Item as={Link} to="/display-salesman">
-                        Display Sales Man
-                      </Dropdown.Item>
-                    </div>
-                    <div className="col-md-4">
-                      <Dropdown.Item as={Link} to="/Vendor-report">
-                        Vendor Report
-                      </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/purchase">
                         Purchase
                       </Dropdown.Item>
@@ -120,26 +122,44 @@ const Navbarfristn = () => {
                 </Dropdown.Menu>
               </Dropdown>
 
-              {/* Product Invoice */}
+              {/*Billing Product Invoice  */}
               <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
                 <Dropdown.Toggle as={Nav.Link}>
                   <FiLayers className="nav-icon" />
-                  Product Invoice <FiChevronDown size={12} className="ms-1" />
+                  Billing <FiChevronDown size={12} className="ms-1" />
                 </Dropdown.Toggle>
                 <Dropdown.Menu
                   className="custom-dropdown p-4"
-                  style={{ minWidth: "600px" }}
+                  style={{ minWidth: "300px" }}
                 >
                   <div className="row">
                     <div className="col-md-4">
+                      {/* Invoice */}
                       <Dropdown.Item as={Link} to="/add-invoice">
-                        Add Invoice
+                        Add New Billing
                       </Dropdown.Item>
 
                       <Dropdown.Item as={Link} to="/display-invoice">
-                        View Invoice
+                        View Billing
                       </Dropdown.Item>
                     </div>
+                  </div>
+                </Dropdown.Menu>
+              </Dropdown>
+
+              {/* Report */}
+              <Dropdown as={Nav.Item} className="nav-item dropdown-hover">
+                <Dropdown.Toggle as={Nav.Link}>
+                  <FiLayers className="nav-icon" />
+                  Report
+                  <FiChevronDown size={12} className="ms-1" />
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  className="custom-dropdown p-4"
+                  style={{ minWidth: "300px" }}
+                >
+                  <div className="row">
+                    <div className="col-md-2"></div>
                   </div>
                 </Dropdown.Menu>
               </Dropdown>

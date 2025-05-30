@@ -102,7 +102,7 @@ const CustomerBilling = ({ onDataChange }) => {
           <div className="form-group col-md-6">
             <div className="form-group col-md-6">
               <label className="form-label">
-                <strong>Select Company</strong>
+                <strong>Select Brand</strong>
               </label>
               <Select
                 options={companies.map((company) => ({
