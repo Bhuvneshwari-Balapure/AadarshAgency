@@ -5,12 +5,20 @@ const createBilling = async (req, res) => {
   console.log(req.body, "create Billing");
 
   try {
-    const { customer, billing, finalAmount, companyId, salesmanId } = req.body;
+    const {
+      customer,
+      billing,
+      finalAmount,
+      companyId,
+      salesmanId,
+      customerId,
+    } = req.body;
 
     // 1. Create Invoice (no transaction)
     const invoice = new Invoice({
       companyId,
       salesmanId,
+      customerId,
       customer,
       billing,
       finalAmount,
@@ -65,7 +73,8 @@ const getAllInvoices = async (req, res) => {
       .populate(
         "billing.productId",
         "productName primaryUnit secondaryUnit primaryPrice secondaryPrice hsnCode gstPercent"
-      );
+      )
+      .populate("customerId", "name");
 
     // console.log(invoices, "invoice");
     res.status(200).json(invoices);
@@ -104,7 +113,8 @@ const getInvoiceById = async (req, res) => {
       .populate(
         "billing.productId",
         "productName primaryUnit secondaryUnit primaryPrice secondaryPrice hsnCode gstPercent"
-      );
+      )
+      .populate("customerId", "name");
 
     // ✅ Add this
 

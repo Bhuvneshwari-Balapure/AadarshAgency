@@ -18,7 +18,7 @@ const CustomerBilling = ({ onDataChange }) => {
       setcustomer(res.data);
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch customer");
+      // alert("Failed to fetch customer");
     }
   };
 
@@ -83,7 +83,8 @@ const CustomerBilling = ({ onDataChange }) => {
     // Include selectedCustomer._id if selected
     onDataChange({
       ...updatedForm,
-      customerId: selectedCustomer?._id || null,
+      customerId: selectedCustomer?._id || null, // Pass customer ID if selected
+      customerName: selectedCustomer?.name || "",
     });
   };
 
@@ -123,11 +124,14 @@ const CustomerBilling = ({ onDataChange }) => {
                   );
                   setselectedCustomer(customerObj);
 
-                  // Pass the customer ID along with the customer form data to parent
-                  onDataChange({
+                  // Pass customer ID and name along with form data
+                  const updatedForm = {
                     ...formData,
                     customerId: customerObj._id,
-                  });
+                    customerName: customerObj.name,
+                  };
+                  setFormData(updatedForm); // Optional: update form state too
+                  onDataChange(updatedForm);
                 }}
                 placeholder="Select a Customer..."
                 menuPortalTarget={document.body}

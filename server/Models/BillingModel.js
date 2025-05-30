@@ -21,6 +21,7 @@ const BillingItemSchema = new mongoose.Schema({
 const InvoiceSchema = new mongoose.Schema({
   companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
   salesmanId: { type: mongoose.Schema.Types.ObjectId, ref: "Salesman" },
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: "Customer" }, // ✅ customer ID
 
   customer: {
     CustomerName: String,

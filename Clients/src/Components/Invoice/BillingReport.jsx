@@ -86,7 +86,9 @@ function BillingReport() {
       const finalData = {
         companyId: customerData.companyId,
         salesmanId: customerData.salesmanId,
+        customerId: customerData.customerId, // ✅ Use _id for customerId
         customer: customerData,
+        customerName: customerData.name,
         billing: billingData,
         finalAmount, // ✅ Include this
       };

@@ -305,7 +305,7 @@ const GenerateInvoice = () => {
 
     fetchInvoice();
   }, [id]);
-
+  console.log(invoice, "ldfjsl");
   if (error) return <p className="text-danger">{error}</p>;
   if (!invoice) return <p>Loading invoice...</p>;
 
@@ -404,13 +404,14 @@ const GenerateInvoice = () => {
                   boxSizing: "border-box",
                 }}
               >
-                <strong>To:</strong> {customer?.CustomerName || "N/A"}
+                <strong>Customer Name:</strong>{" "}
+                {invoice.customerId.name || "N/A"}
                 <br />
-                {customer.address || "N/A"}
+                {/* <strong>Address:</strong> {invoice.customerId.address || "N/A"}
                 <br />
-                <strong>GSTIN:</strong> {customer.gstNumber || "N/A"}
+                <strong>Mobile:</strong> {invoice.customerId.mobile || "N/A"}
                 <br />
-                <strong>number:</strong> {customer.mobile || "N/A"}
+                <strong>GSTIN:</strong> {invoice.customerId.gstNumber || "N/A"} */}
               </div>
 
               {/* Right box */}

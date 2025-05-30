@@ -66,16 +66,16 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
   //   const gstAmount = t + gst / 100;
   //   return gstAmount * q;
   // };
-  const calculateAmountWithGST = (total, qty, gstPercent) => {
-    const t = parseFloat(total);
-    const q = parseFloat(qty);
-    const gst = parseFloat(gstPercent);
+  // const calculateAmountWithGST = (total, qty, gstPercent) => {
+  //   const t = parseFloat(total);
+  //   const q = parseFloat(qty);
+  //   const gst = parseFloat(gstPercent);
 
-    if (isNaN(t) || isNaN(q)) return 0;
-    const subtotal = t * q;
-    const gstAmount = subtotal * (gst / 100);
-    return subtotal + gstAmount;
-  };
+  //   if (isNaN(t) || isNaN(q)) return 0;
+  //   const subtotal = t;
+  //   const gstAmount = subtotal * (gst / 100);
+  //   return subtotal + gstAmount;
+  // };
 
   // Recalculate derived fields for a row
   // const recalculateRow = (row) => {
@@ -101,25 +101,59 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
   //     Amount: amount.toFixed(2),
   //   };
   // };
+  // const recalculateRow = (row) => {
+  //   let rate = parseFloat(row.Rate) || 0;
+  //   const schPercent = parseFloat(row.Sch) || 0;
+  //   const cdPercent = parseFloat(row.CD) || 0;
+  //   const qty = parseFloat(row.Qty) || 0;
+  //   const gstPercent = parseFloat(row.GST) || 0;
+  //   const total = qty * rate;
+
+  //   // Overwrite rate to match total (as per your new logic)
+  //   rate = total;
+
+  //   const schAmt = (total * schPercent) / 100;
+  //   const cdAmt = (total * cdPercent) / 100;
+  //   // const updateRate = qty * rate; // Use qty to calculate the total rate
+
+  //   // const total = updateRate - schAmt - cdAmt;
+  //   const amount = calculateAmountWithGST(total, qty, gstPercent);
+
+  //   return {
+  //     ...row,
+  //     SchAmt: schAmt.toFixed(2),
+  //     CDAmt: cdAmt.toFixed(2),
+  //     Total: total.toFixed(2),
+
+  //     Amount: amount.toFixed(2),
+  //   };
+  // };
+
+  const calculateAmountWithGST = (amount, gstPercent) => {
+    const gstAmount = (amount * gstPercent) / 100;
+    return amount + gstAmount;
+  };
+
   const recalculateRow = (row) => {
     const rate = parseFloat(row.Rate) || 0;
+    const qty = parseFloat(row.Qty) || 0;
     const schPercent = parseFloat(row.Sch) || 0;
     const cdPercent = parseFloat(row.CD) || 0;
-    const qty = parseFloat(row.Qty) || 0;
     const gstPercent = parseFloat(row.GST) || 0;
 
-    const schAmt = (rate * schPercent) / 100;
-    const cdAmt = (rate * cdPercent) / 100;
+    const total = rate * qty;
+    const schAmt = (total * schPercent) / 100;
+    const cdAmt = (total * cdPercent) / 100;
+    const discountedTotal = total - schAmt - cdAmt;
 
-    const total = rate - schAmt - cdAmt;
-    const amount = calculateAmountWithGST(total, qty, gstPercent);
+    const finalAmount = calculateAmountWithGST(discountedTotal, gstPercent);
 
     return {
       ...row,
+      Total: discountedTotal.toFixed(2),
       SchAmt: schAmt.toFixed(2),
       CDAmt: cdAmt.toFixed(2),
-      Total: total.toFixed(2),
-      Amount: amount.toFixed(2),
+      Amount: finalAmount.toFixed(2),
     };
   };
 
@@ -175,7 +209,7 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
           );
           return; // Stop processing
         }
-        row.Rate = prod.mrp;
+        row.Rate = prod.salesRate; // Always use salesRate
       }
     }
 
