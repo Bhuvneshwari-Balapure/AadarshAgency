@@ -164,9 +164,9 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
     if (field === "product") {
       row.product = value;
       row.GST = value.gstPercent || "";
-      row.Unit = value.unit || "";
+      // row.Unit = value.unit || "";
       row.Rate = value.salesRate || ""; // ✅ Always set salesRate
-      // row.Unit = value.primaryUnit || "";
+      row.Unit = value.primaryUnit || "";
       // row.Rate = value.primaryPrice || "";
     }
 
@@ -422,16 +422,16 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
                         }
                       >
                         <option value="">Select Unit</option>
-                        {row.product?.unit && (
-                          <option value={row.product?.unit}>
-                            {row.product?.unit}
+                        {row.product?.primaryUnit && (
+                          <option value={row.product?.primaryUnit}>
+                            {row.product?.primaryUnit}
                           </option>
                         )}
-                        {/* {row.product?.secondaryUnit && (
-                          <option value={row.product.secondaryUnit}>
-                            {row.product.secondaryUnit}
+                        {row.product?.secondaryUnit && (
+                          <option value={row.product?.secondaryUnit}>
+                            {row.product?.secondaryUnit}
                           </option>
-                        )} */}
+                        )}
                       </select>
                     ) : ["SchAmt", "CDAmt", "Total", "Amount"].includes(
                         field

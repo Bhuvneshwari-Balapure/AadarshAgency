@@ -4,8 +4,11 @@ const productSchema = new mongoose.Schema({
   companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
 
   productName: { type: String },
-
-  unit: { type: String }, // New field for Unit dropdown
+  primaryUnit: String,
+  secondaryUnit: String,
+  primaryPrice: Number,
+  secondaryPrice: Number,
+  // unit: { type: String }, // New field for Unit dropdown
   mrp: { type: Number }, // New MRP field
   salesRate: { type: Number }, // New Sales Rate field
   purchaseRate: { type: Number }, // New Purchase Rate field

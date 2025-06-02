@@ -10,7 +10,7 @@ const Product = () => {
   const [formData, setFormData] = useState({
     companyId: "",
     productName: "",
-    unit: "", // New field
+    // unit: "", // New field
     mrp: "", // New field
     salesRate: "", // New field
     purchaseRate: "", // New field
@@ -19,10 +19,10 @@ const Product = () => {
     gstPercent: 0,
     // categoryId: "",
     // subCategoryId: "",
-    // primaryUnit: "",
-    // secondaryUnit: "",
-    // primaryPrice: "",
-    // secondaryPrice: "",
+    primaryUnit: "",
+    secondaryUnit: "",
+    primaryPrice: "",
+    secondaryPrice: "",
   });
 
   const [companies, setCompanies] = useState([]);
@@ -82,6 +82,97 @@ const Product = () => {
     }));
   };
 
+  const handleEdit = (index) => {
+    const selectedProduct = products[index];
+    setFormData({
+      _id: selectedProduct._id, // <-- Add this
+      companyId: selectedProduct.companyId?._id || "",
+      productName: selectedProduct.productName || "",
+      // unit: selectedProduct.unit || "",
+      mrp: selectedProduct.mrp || "",
+      salesRate: selectedProduct.salesRate || "",
+      purchaseRate: selectedProduct.purchaseRate || "",
+      availableQty: selectedProduct.availableQty || "",
+      hsnCode: selectedProduct.hsnCode || "",
+      gstPercent: selectedProduct.gstPercent || 9,
+      primaryUnit: selectedProduct.primaryUnit || "",
+      secondaryUnit: selectedProduct.secondaryUnit || "",
+      primaryPrice: selectedProduct.primaryPrice || 0,
+      secondaryPrice: selectedProduct.secondaryPrice || 0,
+    });
+    setEditIndex(index);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const productData = {
+        companyId: formData.companyId,
+        productName: formData.productName,
+        // unit: formData.unit,
+        mrp: formData.mrp,
+        salesRate: formData.salesRate,
+        purchaseRate: formData.purchaseRate,
+        availableQty: formData.availableQty || 0,
+        hsnCode: formData.hsnCode,
+        gstPercent: formData.gstPercent,
+        primaryUnit: formData.primaryUnit,
+        secondaryUnit: formData.secondaryUnit,
+        primaryPrice: formData.primaryPrice,
+        secondaryPrice: formData.secondaryPrice,
+        lastUpdated: new Date(),
+      };
+
+      if (formData._id) {
+        // Edit mode - update existing product
+        await axios.put(`/product/${formData._id}`, productData);
+        alert("Product updated successfully!");
+      } else {
+        // Create mode - add new product
+        await axios.post("/product", productData);
+        alert("Product created successfully!");
+        console.log(" new product with data:", productData);
+      }
+
+      // Reset form and refresh list
+      setFormData({
+        companyId: "",
+        productName: "",
+        // unit: "",
+        mrp: "",
+        salesRate: "",
+        purchaseRate: "",
+        availableQty: 0,
+        hsnCode: "",
+        gstPercent: 9,
+        primaryUnit: "",
+        secondaryUnit: "",
+        primaryPrice: "",
+        secondaryPrice: "",
+      });
+      setEditIndex(null);
+      fetchProducts();
+    } catch (err) {
+      console.error("Error submitting product:", err);
+      alert("Failed to submit product.");
+    }
+  };
+
+  const handleDelete = async (index) => {
+    const productToDelete = products[index];
+    if (!productToDelete?._id) return;
+
+    try {
+      await axios.delete(`/product/${productToDelete._id}`);
+      alert("Product deleted successfully!");
+      fetchProducts();
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      alert("Failed to delete product.");
+    }
+  };
+
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
   //   try {
@@ -113,85 +204,6 @@ const Product = () => {
   //   }
   // };
 
-  const handleEdit = (index) => {
-    const selectedProduct = products[index];
-    setFormData({
-      _id: selectedProduct._id, // <-- Add this
-      companyId: selectedProduct.companyId?._id || "",
-      productName: selectedProduct.productName || "",
-      unit: selectedProduct.unit || "",
-      mrp: selectedProduct.mrp || "",
-      salesRate: selectedProduct.salesRate || "",
-      purchaseRate: selectedProduct.purchaseRate || "",
-      availableQty: selectedProduct.availableQty || "",
-      hsnCode: selectedProduct.hsnCode || "",
-      gstPercent: selectedProduct.gstPercent || 9,
-    });
-    setEditIndex(index);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const productData = {
-        companyId: formData.companyId,
-        productName: formData.productName,
-        unit: formData.unit,
-        mrp: formData.mrp,
-        salesRate: formData.salesRate,
-        purchaseRate: formData.purchaseRate,
-        availableQty: formData.availableQty || 0,
-        hsnCode: formData.hsnCode,
-        gstPercent: formData.gstPercent,
-        lastUpdated: new Date(),
-      };
-      console.log("Submitting productData:", productData);
-
-      if (formData._id) {
-        // Edit mode - update existing product
-        await axios.put(`/product/${formData._id}`, productData);
-        alert("Product updated successfully!");
-      } else {
-        // Create mode - add new product
-        await axios.post("/product", productData);
-        alert("Product created successfully!");
-      }
-
-      // Reset form and refresh list
-      setFormData({
-        companyId: "",
-        productName: "",
-        unit: "",
-        mrp: "",
-        salesRate: "",
-        purchaseRate: "",
-        availableQty: 0,
-        hsnCode: "",
-        gstPercent: 9,
-      });
-      setEditIndex(null);
-      fetchProducts();
-    } catch (err) {
-      console.error("Error submitting product:", err);
-      alert("Failed to submit product.");
-    }
-  };
-
-  const handleDelete = async (index) => {
-    const productToDelete = products[index];
-    if (!productToDelete?._id) return;
-
-    try {
-      await axios.delete(`/product/${productToDelete._id}`);
-      alert("Product deleted successfully!");
-      fetchProducts();
-    } catch (err) {
-      console.error("Error deleting product:", err);
-      alert("Failed to delete product.");
-    }
-  };
-
   return (
     <div className="container mt-2">
       <h3 className="mb-3">Create Product</h3>
@@ -206,7 +218,7 @@ const Product = () => {
               <form onSubmit={handleSubmit}>
                 <div className="row">
                   {/* Brand */}
-                  <div className="col-md-4 mb-3">
+                  <div className="col-md-6 mb-3">
                     <label>Brand</label>
                     <select
                       name="companyId"
@@ -223,7 +235,7 @@ const Product = () => {
                     </select>
                   </div>
                   {/* Other inputs */}
-                  <div className="col-md-4 mb-3">
+                  <div className="col-md-6 mb-3">
                     <label>Product Name</label>
                     <input
                       type="text"
@@ -273,19 +285,20 @@ const Product = () => {
                   </div> */}
 
                   {/* ------------Primary and Secondary Unit / Price code------------------- */}
-                  {/* <div className="col-md-2 mb-3">
-                    <label>Primary Unit</label>
+                  <div className="col-md-3 mb-3">
+                    <label>Unit (e.g. KG) </label>
                     <input
                       type="text"
                       name="primaryUnit"
+                      placeholder="e.g. KG"
                       value={formData.primaryUnit}
                       onChange={handleChange}
                       className="form-control"
                     />
                   </div>
 
-                  <div className="col-md-2 mb-3">
-                    <label>Primary Price</label>
+                  <div className="col-md-3 mb-3">
+                    <label>KG Price</label>
                     <input
                       type="number"
                       name="primaryPrice"
@@ -295,19 +308,20 @@ const Product = () => {
                     />
                   </div>
 
-                  <div className="col-md-2 mb-3">
-                    <label>Secondary Unit</label>
+                  <div className="col-md-3 mb-3">
+                    <label>Unit (e.g. Pieces) </label>
                     <input
                       type="text"
                       name="secondaryUnit"
+                      placeholder="e.g. Pcs"
                       value={formData.secondaryUnit}
                       onChange={handleChange}
                       className="form-control"
                     />
                   </div>
 
-                  <div className="col-md-2 mb-3">
-                    <label>Secondary Price</label>
+                  <div className="col-md-3 mb-3">
+                    <label>Pieces Price</label>
                     <input
                       type="number"
                       name="secondaryPrice"
@@ -315,12 +329,14 @@ const Product = () => {
                       onChange={handleChange}
                       className="form-control"
                     />
-                  </div> */}
+                  </div>
+
                   {/* ----------------------------------------------------------- */}
 
                   {/* ------------------------Unit dropdown / MRP / Purchase-Sales Rate--------------------- */}
-                  <div className="col-md-2 mb-3">
-                    {/* unit */}
+
+                  {/* <div className="col-md-3 mb-3">
+                    unit 
                     <label>Unit</label>
                     <select
                       name="unit"
@@ -340,11 +356,11 @@ const Product = () => {
                       <option value="KG">KG</option>
                       <option value="Pcs">Pcs</option>
                     </select>
-                  </div>
+                  </div>*}
 
                   {/* MRP */}
 
-                  <div className="col-md-2 mb-3">
+                  <div className="col-md-3 mb-3">
                     <label>MRP</label>
                     <input
                       type="number"
@@ -356,7 +372,7 @@ const Product = () => {
                   </div>
 
                   {/* Purchase Rate */}
-                  <div className="col-md-2 mb-3">
+                  <div className="col-md-3 mb-3">
                     <label>Purchase Rate</label>
                     <input
                       type="number"
@@ -368,7 +384,7 @@ const Product = () => {
                   </div>
 
                   {/* sales Rate */}
-                  <div className="col-md-2 mb-3">
+                  <div className="col-md-3 mb-3">
                     <label>Sales Rate</label>
                     <input
                       type="number"
@@ -431,66 +447,45 @@ const Product = () => {
                 <p>No products added yet.</p>
               ) : (
                 <div className="table-responsive">
-                  <table className="table table-bordered table-hover">
-                    <thead className="table-light">
+                  <table className="table table-bordered mt-4">
+                    <thead className="thead-light">
                       <tr>
-                        <th>#</th>
                         <th>Product Name</th>
                         <th>Brand</th>
-                        {/* <th>Category</th> */}
-                        {/* <th>Sub Category</th> */}
-                        {/* <th>Primary Unit</th> */}
-                        {/* <th>Primary Price</th> */}
-                        {/* <th>Secondary Unit</th> */}
-                        {/* <th>Secondary Price</th> */}
-                        <th>Unit</th>
                         <th>MRP</th>
-                        <th>Purchase Rate</th>
                         <th>Sales Rate</th>
-                        <th>Available Qty</th>
-                        <th>HSN Code</th>
-                        <th>GST %</th>
+                        <th>Purchase Rate</th>
+                        {/* <th>Primary Unit</th>
+                        <th>Primary Price</th>
+                        <th>Secondary Unit</th>
+                        <th>Secondary Price</th> */}
                         <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {products.map((product, index) => (
-                        <tr key={product._id || index}>
-                          <td>{index + 1}</td>
+                        <tr key={product._id}>
                           <td>{product.productName}</td>
-                          <td>{product.companyId?.name || "N/A"}</td>
-                          {/* <td>
-                            {product.categoryId?.cat || "Unknown Category"}
-                          </td> */}
-                          {/* <td>
-                            {product.subCategoryId?.subCat ||
-                              "Unknown SubCategory"}
-                          </td> */}
-                          {/* <td>{product.primaryUnit}</td> */}
-                          {/* <td>₹ {product.primaryPrice}</td> */}
-                          {/* <td>{product.secondaryUnit}</td> */}
-                          {/* <td>₹ {product.secondaryPrice}</td> */}
-                          <td>{product.unit || "-"}</td>
-                          <td>₹ {product.mrp || 0}</td>
-                          <td>₹ {product.purchaseRate || 0}</td>
-                          <td>₹ {product.salesRate || 0}</td>
-                          <td>{product.availableQty ?? 0}</td>
-                          <td>{product.hsnCode || "-"}</td>
-                          <td>{product.gstPercent ?? 9}%</td>
-                          <td className="d-flex g-2">
+                          <td>{product.companyId?.name || "-"}</td>
+                          <td>{product.mrp}</td>
+                          <td>{product.salesRate}</td>
+                          <td>{product.purchaseRate}</td>
+                          {/* <td>{product.primaryUnit}</td>
+                          <td>{product.primaryPrice}</td>
+                          <td>{product.secondaryUnit}</td>
+                          <td>{product.secondaryPrice}</td> */}
+                          <td>
                             <button
-                              className="btn btn-sm btn-outline-primary me-2"
+                              className="btn btn-sm btn-warning me-2"
                               onClick={() => handleEdit(index)}
-                              title="Edit"
                             >
-                              <PencilFill size={16} />
+                              <PencilFill />
                             </button>
                             <button
-                              className="btn btn-sm btn-outline-danger"
+                              className="btn btn-sm btn-danger"
                               onClick={() => handleDelete(index)}
-                              title="Delete"
                             >
-                              <TrashFill size={16} />
+                              <TrashFill />
                             </button>
                           </td>
                         </tr>

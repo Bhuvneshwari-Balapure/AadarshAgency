@@ -2,11 +2,12 @@ const Product = require("../Models/ProductModel");
 
 // POST /api/products - Create a new product
 const createProduct = async (req, res) => {
+  console.log(req.body, "create Product");
   try {
     const {
       companyId,
       productName,
-      unit,
+      // unit,
       mrp,
       salesRate,
       purchaseRate,
@@ -15,10 +16,10 @@ const createProduct = async (req, res) => {
       gstPercent,
       // categoryId,
       // subCategoryId,
-      // primaryUnit,
-      // secondaryUnit,
-      // primaryPrice,
-      // secondaryPrice,
+      primaryUnit,
+      secondaryUnit,
+      primaryPrice,
+      secondaryPrice,
     } = req.body;
 
     // Basic validation (add more if needed)
@@ -29,7 +30,7 @@ const createProduct = async (req, res) => {
     const newProduct = new Product({
       companyId,
       productName,
-      unit,
+      // unit,
       mrp,
       salesRate,
       purchaseRate,
@@ -38,10 +39,10 @@ const createProduct = async (req, res) => {
       gstPercent,
       // categoryId,
       // subCategoryId,
-      // primaryUnit,
-      // secondaryUnit,
-      // primaryPrice,
-      // secondaryPrice,
+      primaryUnit,
+      secondaryUnit,
+      primaryPrice,
+      secondaryPrice,
     });
 
     const savedProduct = await newProduct.save();
@@ -109,13 +110,17 @@ const updateProduct = async (req, res) => {
   const {
     companyId,
     productName,
-    unit,
+    // unit,
     mrp,
     salesRate,
     purchaseRate,
     availableQty,
     hsnCode,
     gstPercent,
+    primaryUnit,
+    secondaryUnit,
+    primaryPrice,
+    secondaryPrice,
   } = req.body;
 
   try {
@@ -123,7 +128,11 @@ const updateProduct = async (req, res) => {
     if (
       !companyId ||
       !productName ||
-      !unit ||
+      // !unit ||
+      primaryUnit === "" ||
+      secondaryUnit === "" ||
+      primaryPrice === "" ||
+      secondaryPrice === "" ||
       mrp === "" ||
       salesRate === "" ||
       purchaseRate === ""
@@ -141,7 +150,12 @@ const updateProduct = async (req, res) => {
       {
         companyId,
         productName,
-        unit,
+        // unit,
+        primaryUnit,
+        secondaryUnit,
+        primaryPrice,
+        secondaryPrice,
+
         mrp,
         salesRate,
         purchaseRate,
