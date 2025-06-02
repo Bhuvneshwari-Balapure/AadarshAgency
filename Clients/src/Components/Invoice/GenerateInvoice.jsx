@@ -321,6 +321,7 @@ const GenerateInvoice = () => {
       return acc;
     }, {});
   };
+  console.log(invoice, "invoice");
 
   const totals = calculateTotals();
   const {
@@ -473,15 +474,24 @@ const GenerateInvoice = () => {
                     <td>{item.itemName || "N/A"}</td>
                     <td>{item.productId?.hsnCode || "N/A"}</td>
                     <td>{item.gst || 0}</td>
-                    <td>{`${item.qty || 0} ${item.unit}`}</td>
+                    <td>
+                      {`${item.qty || 0} 
+                    `}
+                      {/* ${item.unit} */}
+                    </td>
                     <td>{item.Free || 0}</td>
                     <td>{item.rate || 0}</td>
                     <td>{item.sch || 0}</td>
                     <td>{item.schAmt || 0}</td>
                     <td>{item.cd || 0}</td>
                     <td>{item.total || 0}</td>
-                    <td>{item.sgst || 0}</td>
-                    <td>{item.cgst || 0}</td>
+                    <td>
+                      {(item.productId?.gst || 0) / 2} {/* SGST */}
+                    </td>
+                    <td>
+                      {(item.gstPercent || 0) / 2} {/* CGST */}
+                    </td>
+
                     <td>{item.amount || 0}</td>
                   </tr>
                 ))}

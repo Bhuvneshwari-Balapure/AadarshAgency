@@ -470,7 +470,7 @@ const Product = () => {
                           <td>{product.mrp}</td>
                           <td>{product.salesRate}</td>
                           <td>{product.purchaseRate}</td>
-                          {/* <td>{product.primaryUnit}</td>
+                          {/*  <td>{product.primaryUnit}</td>
                           <td>{product.primaryPrice}</td>
                           <td>{product.secondaryUnit}</td>
                           <td>{product.secondaryPrice}</td> */}
