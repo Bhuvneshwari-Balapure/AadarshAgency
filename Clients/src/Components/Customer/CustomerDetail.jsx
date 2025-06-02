@@ -69,7 +69,7 @@ function CustomerDetail() {
                     <tr key={cust._id}>
                       <td>{index + 1}</td>
                       <td>{cust.name}</td>
-                      <td>{cust.brandId?.name || "N/A"}</td>
+                      <td>{cust.firmId?.name || "N/A"}</td>
                       <td>{cust.creditLimit}</td>
                       <td>{new Date(cust.creditDay).toLocaleDateString()}</td>
                       <td>

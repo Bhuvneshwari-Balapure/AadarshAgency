@@ -408,11 +408,11 @@ const GenerateInvoice = () => {
                 <strong>Customer Name:</strong>{" "}
                 {invoice.customerId.name || "N/A"}
                 <br />
-                {/* <strong>Address:</strong> {invoice.customerId.address || "N/A"}
+                <strong>Address:</strong> {invoice.customerId.address || "N/A"}
                 <br />
                 <strong>Mobile:</strong> {invoice.customerId.mobile || "N/A"}
                 <br />
-                <strong>GSTIN:</strong> {invoice.customerId.gstNumber || "N/A"} */}
+                <strong>GSTIN:</strong> {invoice.customerId.gstNumber || "N/A"}
               </div>
 
               {/* Right box */}

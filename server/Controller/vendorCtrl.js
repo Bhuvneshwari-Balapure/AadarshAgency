@@ -5,11 +5,16 @@ const createVendor = async (req, res) => {
   res.status(201).json(newVendor);
 };
 const getallVendors = async (req, res) => {
-  const vendors = await Vendor.find().sort({ createdAt: -1 });
+  const vendors = await Vendor.find()
+    .sort({ createdAt: -1 })
+    .populate("firmId", "name");
   res.status(200).json(vendors);
 };
 const getVendorById = async (req, res) => {
-  const vendor = await Vendor.findById(req.params.id);
+  const vendor = await Vendor.findById(req.params.id).populate(
+    "firmId",
+    "name"
+  );
   if (!vendor) {
     return res.status(404).json({ message: "Vendor not found" });
   }

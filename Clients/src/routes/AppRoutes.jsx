@@ -16,12 +16,14 @@ import GenerateInvoice from "../Components/Invoice/GenerateInvoice";
 import VendorReport from "../Components/SalesMan/VendorReport";
 import PurchaseForm from "../Components/SalesMan/PurchaseForm";
 import CustomerDetail from "../Components/Customer/CustomerDetail";
+import FirmDetail from "../Components/Firm/FirmDetail";
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<DashboardCards />} />
+        <Route path="/add-company" element={<FirmDetail />} />
         <Route path="/brand" element={<CompanyDetail />} />
         <Route path="/pro-categories" element={<CategoryDetail />} />
         <Route path="/pro-SubCat" element={<SubCatDetail />} />

@@ -64,6 +64,9 @@ const Navbarfristn = () => {
                   <div className="row">
                     {/* Brand */}
                     <div className="col-md-4">
+                      <Dropdown.Item as={Link} to="/add-company">
+                        Add Company
+                      </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/brand">
                         Add Brand
                       </Dropdown.Item>
@@ -71,7 +74,7 @@ const Navbarfristn = () => {
                         Create Product
                       </Dropdown.Item>
                       <Dropdown.Item as={Link} to="/Vendor-report">
-                        Vendor Report
+                        Add Vendor
                       </Dropdown.Item>
 
                       {/* <Dropdown.Item as={Link} to="/pro-categories">

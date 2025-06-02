@@ -6,25 +6,28 @@ import { ToastContainer, toast } from "react-toastify";
 function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
   const [companies, setCompanies] = useState([]);
   const [customer, setCustomer] = useState({
+    firmId: "",
     name: "",
-    brandId: "",
+    mobile: "",
+    address: "",
+    gstNumber: "",
     creditLimit: "",
     creditDay: "",
   });
 
-  const fetchCompanies = async () => {
+  const fetchFirm = async () => {
     try {
-      const res = await axios.get("/company");
+      const res = await axios.get("/firm");
       setCompanies(res.data);
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch companies");
+      alert("Failed to fetch firms");
     }
   };
-  console.log(companies, "Companies fetched");
+  console.log(companies, "Firms fetched");
 
   useEffect(() => {
-    fetchCompanies();
+    fetchFirm();
   }, []);
 
   // edit customer
@@ -32,7 +35,7 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
     if (editingCustomer) {
       setCustomer({
         name: editingCustomer.name || "",
-        brandId: editingCustomer.brandId?._id || editingCustomer.brandId || "",
+        firmId: editingCustomer.firmId?._id || editingCustomer.firmId || "",
         creditLimit: editingCustomer.creditLimit || "",
         creditDay: editingCustomer.creditDay?.slice(0, 10) || "",
       });
@@ -57,7 +60,7 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
       }
 
       // Reset form and refresh data
-      setCustomer({ name: "", brandId: "", creditLimit: "", creditDay: "" });
+      setCustomer({ name: "", firmId: "", creditLimit: "", creditDay: "" });
       setEditingCustomer(null);
       if (refresh) refresh();
     } catch (error) {
@@ -73,6 +76,22 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
         <Card.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
+              <Form.Label>Firm</Form.Label>
+              <Form.Select
+                name="firmId"
+                value={customer.firmId}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Firm</option>
+                {companies.map((comp) => (
+                  <option key={comp._id} value={comp._id}>
+                    {comp.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
               <Form.Label>Customer Name</Form.Label>
               <Form.Control
                 name="name"
@@ -83,20 +102,22 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Brand</Form.Label>
-              <Form.Select
-                name="brandId"
-                value={customer.brandId}
+              <Form.Label>Mobile Number</Form.Label>
+              <Form.Control
+                name="mobile"
+                value={customer.mobile}
                 onChange={handleChange}
                 required
-              >
-                <option value="">Select Brand</option>
-                {companies.map((comp) => (
-                  <option key={comp._id} value={comp._id}>
-                    {comp.name}
-                  </option>
-                ))}
-              </Form.Select>
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                name="address"
+                value={customer.address}
+                onChange={handleChange}
+                required
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -118,6 +139,17 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
                 value={customer.creditDay}
                 onChange={handleChange}
                 required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>GST No.</Form.Label>
+              <Form.Control
+                name="gstNumber"
+                className="form-control"
+                placeholder="GST No."
+                value={customer.gstNumber}
+                onChange={handleChange}
               />
             </Form.Group>
 

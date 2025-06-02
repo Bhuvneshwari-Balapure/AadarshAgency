@@ -9,6 +9,7 @@ const path = require("path");
 app.use(cors());
 // ---------Routes----------
 // const adminRoute = require("./Routes/adminRoute");
+const FirmRoute = require("./Routes/FirmRoute");
 const CompanyRoute = require("./Routes/CompanyRoute");
 const CategoryRoute = require("./Routes/CategoryRoute");
 const SubCategoryRoute = require("./Routes/SubCategoryRoute");
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // app.use("public", express.static(path.join(__dirname, "public/Images")));
 
 // app.use("/admin", adminRoute);
+app.use("/api/firm", FirmRoute);
 app.use("/api/company", CompanyRoute);
 app.use("/api/category", CategoryRoute);
 app.use("/api/Subcategory", SubCategoryRoute);
