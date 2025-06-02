@@ -25,7 +25,7 @@ const FirmDetail = () => {
       setCompanies(res.data);
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch companies");
+      // alert("Failed to fetch companies");
     }
   };
 

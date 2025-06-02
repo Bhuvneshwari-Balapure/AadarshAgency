@@ -157,47 +157,164 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
     };
   };
 
+  // const handleChange = (index, field, value) => {
+  //   const updatedRows = [...rows];
+  //   let row = { ...updatedRows[index], [field]: value };
+
+  //   // if (field === "product") {
+  //   //   row.product = value;
+  //   //   row.GST = value.gstPercent || "";
+  //   //   // row.Unit = value.unit || "";
+  //   //   row.Rate = value.salesRate || ""; // ✅ Always set salesRate
+  //   //   row.Unit = value.primaryUnit || "";
+  //   //   // row.Rate = value.primaryPrice || "";
+  //   // }
+
+  //   if (field === "product") {
+  //     row.product = value;
+  //     row.GST = value.gstPercent || "";
+  //     row.Unit = value.primaryUnit || "";
+  //     row.Rate = value.primaryPrice || "";
+  //   }
+
+  //   if (field === "Unit" && row.product) {
+  //     const prod = row.product;
+  //     if (value === prod.primaryUnit) {
+  //       row.Rate = prod.primaryPrice;
+  //     } else if (value === prod.secondaryUnit) {
+  //       row.Rate = prod.secondaryPrice;
+  //     }
+  //   }
+
+  //   // if (field === "Unit" && row.product) {
+  //   //   const prod = row.product;
+  //   //   if (value === prod.unit) {
+  //   //     row.Rate = prod.mrp;
+  //   //   }
+  //   // if (value === prod.unit) {
+  //   //   row.Rate = prod.mrp;
+  //   // }
+  //   // else if (value === prod.secondaryUnit) {
+  //   //   row.Rate = prod.secondaryPrice;
+  //   // }
+  //   // }
+
+  //   // if (field === "Qty" && row.product) {
+  //   //   const qtyNum = parseFloat(value);
+  //   //   const prod = row.product;
+  //   //   if (!isNaN(qtyNum) && qtyNum > 0) {
+  //   //     if (!isNaN(qtyNum) && qtyNum > 0) {
+  //   //       row.Rate = prod.mrp; // Always use mrp as rate
+  //   //     }
+  //   //     // if (row.Unit === prod.primaryUnit) {
+  //   //     //   row.Rate = prod.primaryPrice;
+  //   //     // } else if (row.Unit === prod.secondaryUnit) {
+  //   //     //   row.Rate = prod.secondaryPrice;
+  //   //     // }
+  //   //   }
+  //   // }
+
+  //   if (field === "Qty" && row.product) {
+  //     const qtyNum = parseFloat(value);
+  //     const prod = row.product;
+  //     if (!isNaN(qtyNum) && qtyNum > 0) {
+  //       if (qtyNum > prod.availableQty) {
+  //         toast.error(
+  //           `Product "${prod.productName}" has only ${prod.availableQty} ${prod.unit} in stock.`,
+  //           { position: "top-center", autoClose: 3000 }
+  //         );
+  //         return; // Stop processing
+  //       }
+  //       row.Rate = prod.salesRate; // Always use salesRate
+  //     }
+  //   }
+
+  //   row = recalculateRow(row);
+
+  //   updatedRows[index] = row;
+  //   setRows(updatedRows);
+
+  //   // 👇 Now correctly compute FinaltotalAmount here:
+  //   const finalTotal = updatedRows
+  //     .reduce((sum, r) => {
+  //       const amt = parseFloat(r.Amount);
+  //       return sum + (isNaN(amt) ? 0 : amt);
+  //     }, 0)
+  //     .toFixed(2);
+
+  //   setFinalTotalAmount(finalTotal);
+
+  //   // Filter and send data upwards
+  //   const filteredBillingData = updatedRows
+  //     .filter(
+  //       (r) =>
+  //         r.product !== null &&
+  //         r.Qty !== "" &&
+  //         !isNaN(parseFloat(r.Qty)) &&
+  //         parseFloat(r.Qty) > 0
+  //     )
+  //     // .map((r) => ({
+  //     //   productName: r.product.productName,
+  //     //   categoryName: r.product.categoryName,
+  //     //   hsnCode: r.product.hsnCode, // <-- Add this line
+  //     //   unit: r.Unit,
+  //     //   qty: parseFloat(r.Qty),
+  //     //   rate: parseFloat(r.Rate),
+  //     //   sch: parseFloat(r.Sch) || 0,
+  //     //   schAmt: parseFloat(r.SchAmt) || 0,
+  //     //   cd: parseFloat(r.CD) || 0,
+  //     //   cdAmt: parseFloat(r.CDAmt) || 0,
+  //     //   total: parseFloat(r.Total) || 0,
+  //     //   gst: parseFloat(r.GST) || 0,
+  //     //   amount: parseFloat(r.Amount) || 0,
+  //     // }));
+
+  //     .map((r) => ({
+  //       productId: r.product._id, // ✅ Actual MongoDB reference
+  //       itemName: r.product.productName, // Optional: for readability
+  //       // categoryName: r.product.categoryName,
+  //       hsnCode: r.product.hsnCode,
+  //       unit: r.product.unit,
+  //       qty: parseFloat(r.Qty),
+  //       Free: parseFloat(r.Free) || 0,
+  //       rate: parseFloat(r.Rate),
+  //       sch: parseFloat(r.Sch) || 0,
+  //       schAmt: parseFloat(r.SchAmt) || 0,
+  //       cd: parseFloat(r.CD) || 0,
+  //       cdAmt: parseFloat(r.CDAmt) || 0,
+  //       total: parseFloat(r.Total) || 0,
+  //       gst: parseFloat(r.GST) || 0,
+  //       amount: parseFloat(r.Amount) || 0,
+  //     }));
+  //   onBillingDataChange(filteredBillingData, finalTotal);
+  //   console.log(finalTotal, "final amount");
+  // };
+
+  // Handle keyboard shortcuts for new line and delete
+
   const handleChange = (index, field, value) => {
     const updatedRows = [...rows];
     let row = { ...updatedRows[index], [field]: value };
 
+    // If product selected
     if (field === "product") {
       row.product = value;
       row.GST = value.gstPercent || "";
-      // row.Unit = value.unit || "";
-      row.Rate = value.salesRate || ""; // ✅ Always set salesRate
       row.Unit = value.primaryUnit || "";
-      // row.Rate = value.primaryPrice || "";
+      row.Rate = value.primaryPrice || "";
     }
 
+    // If unit changed
     if (field === "Unit" && row.product) {
       const prod = row.product;
-      if (value === prod.unit) {
-        row.Rate = prod.mrp;
+      if (value === prod.primaryUnit) {
+        row.Rate = prod.primaryPrice;
+      } else if (value === prod.secondaryUnit) {
+        row.Rate = prod.secondaryPrice;
       }
-      // if (value === prod.unit) {
-      //   row.Rate = prod.mrp;
-      // }
-      // else if (value === prod.secondaryUnit) {
-      //   row.Rate = prod.secondaryPrice;
-      // }
     }
 
-    // if (field === "Qty" && row.product) {
-    //   const qtyNum = parseFloat(value);
-    //   const prod = row.product;
-    //   if (!isNaN(qtyNum) && qtyNum > 0) {
-    //     if (!isNaN(qtyNum) && qtyNum > 0) {
-    //       row.Rate = prod.mrp; // Always use mrp as rate
-    //     }
-    //     // if (row.Unit === prod.primaryUnit) {
-    //     //   row.Rate = prod.primaryPrice;
-    //     // } else if (row.Unit === prod.secondaryUnit) {
-    //     //   row.Rate = prod.secondaryPrice;
-    //     // }
-    //   }
-    // }
-
+    // If quantity entered
     if (field === "Qty" && row.product) {
       const qtyNum = parseFloat(value);
       const prod = row.product;
@@ -207,18 +324,24 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
             `Product "${prod.productName}" has only ${prod.availableQty} ${prod.unit} in stock.`,
             { position: "top-center", autoClose: 3000 }
           );
-          return; // Stop processing
+          return; // Stop further processing
         }
-        row.Rate = prod.salesRate; // Always use salesRate
+
+        // Ensure Rate is set from selected unit
+        if (row.Unit === prod.primaryUnit) {
+          row.Rate = prod.primaryPrice;
+        } else if (row.Unit === prod.secondaryUnit) {
+          row.Rate = prod.secondaryPrice;
+        }
       }
     }
 
+    // Recalculate row with updated values
     row = recalculateRow(row);
-
     updatedRows[index] = row;
     setRows(updatedRows);
 
-    // 👇 Now correctly compute FinaltotalAmount here:
+    // Recalculate final amount
     const finalTotal = updatedRows
       .reduce((sum, r) => {
         const amt = parseFloat(r.Amount);
@@ -228,7 +351,7 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
 
     setFinalTotalAmount(finalTotal);
 
-    // Filter and send data upwards
+    // Send filtered billing data upwards
     const filteredBillingData = updatedRows
       .filter(
         (r) =>
@@ -237,28 +360,11 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
           !isNaN(parseFloat(r.Qty)) &&
           parseFloat(r.Qty) > 0
       )
-      // .map((r) => ({
-      //   productName: r.product.productName,
-      //   categoryName: r.product.categoryName,
-      //   hsnCode: r.product.hsnCode, // <-- Add this line
-      //   unit: r.Unit,
-      //   qty: parseFloat(r.Qty),
-      //   rate: parseFloat(r.Rate),
-      //   sch: parseFloat(r.Sch) || 0,
-      //   schAmt: parseFloat(r.SchAmt) || 0,
-      //   cd: parseFloat(r.CD) || 0,
-      //   cdAmt: parseFloat(r.CDAmt) || 0,
-      //   total: parseFloat(r.Total) || 0,
-      //   gst: parseFloat(r.GST) || 0,
-      //   amount: parseFloat(r.Amount) || 0,
-      // }));
-
       .map((r) => ({
-        productId: r.product._id, // ✅ Actual MongoDB reference
-        itemName: r.product.productName, // Optional: for readability
-        // categoryName: r.product.categoryName,
+        productId: r.product._id,
+        itemName: r.product.productName,
         hsnCode: r.product.hsnCode,
-        unit: r.product.unit,
+        unit: r.Unit,
         qty: parseFloat(r.Qty),
         Free: parseFloat(r.Free) || 0,
         rate: parseFloat(r.Rate),
@@ -270,11 +376,10 @@ const ProductBillingReport = ({ onBillingDataChange }) => {
         gst: parseFloat(r.GST) || 0,
         amount: parseFloat(r.Amount) || 0,
       }));
-    onBillingDataChange(filteredBillingData, finalTotal);
-    console.log(finalTotal, "final amount");
+
+    onBillingDataChange(filteredBillingData);
   };
 
-  // Handle keyboard shortcuts for new line and delete
   const handleKeyDown = (e, rowIndex) => {
     if (e.altKey && e.key === "n") {
       e.preventDefault();
