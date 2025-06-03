@@ -4,9 +4,8 @@ import axios from "../../Config/axios";
 import { ToastContainer, toast } from "react-toastify";
 
 function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
-  const [companies, setCompanies] = useState([]);
   const [customer, setCustomer] = useState({
-    firmId: "",
+    firm: "",
     name: "",
     mobile: "",
     address: "",
@@ -15,27 +14,12 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
     creditDay: "",
   });
 
-  const fetchFirm = async () => {
-    try {
-      const res = await axios.get("/firm");
-      setCompanies(res.data);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to fetch firms");
-    }
-  };
-  console.log(companies, "Firms fetched");
-
-  useEffect(() => {
-    fetchFirm();
-  }, []);
-
   // edit customer
   useEffect(() => {
     if (editingCustomer) {
       setCustomer({
         name: editingCustomer.name || "",
-        firmId: editingCustomer.firmId?._id || editingCustomer.firmId || "",
+        firm: editingCustomer.firm || "",
         creditLimit: editingCustomer.creditLimit || "",
         creditDay: editingCustomer.creditDay?.slice(0, 10) || "",
       });
@@ -60,7 +44,7 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
       }
 
       // Reset form and refresh data
-      setCustomer({ name: "", firmId: "", creditLimit: "", creditDay: "" });
+      setCustomer({ name: "", firm: "", creditLimit: "", creditDay: "" });
       setEditingCustomer(null);
       if (refresh) refresh();
     } catch (error) {
@@ -76,23 +60,34 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
         <Card.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Firm</Form.Label>
-              <Form.Select
+              <Form.Group className="mb-3">
+                <Form.Label>Firm</Form.Label>
+                <Form.Control
+                  name="firm"
+                  type="text"
+                  placeholder="Enter Firm Name"
+                  value={customer.firm}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+              {/* <Form.Select
                 name="firmId"
                 value={customer.firmId}
                 onChange={handleChange}
                 required
-              >
-                <option value="">Select Firm</option>
+                type="text"
+              > */}
+              {/* <option value="">Select Firm</option>
                 {companies.map((comp) => (
                   <option key={comp._id} value={comp._id}>
                     {comp.name}
                   </option>
-                ))}
-              </Form.Select>
+                ))} */}
+              {/* </Form.Select>*/}
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Customer Name</Form.Label>
+              <Form.Label>Contract Person</Form.Label>
               <Form.Control
                 name="name"
                 value={customer.name}

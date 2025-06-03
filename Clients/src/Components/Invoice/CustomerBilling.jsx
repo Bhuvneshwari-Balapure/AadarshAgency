@@ -107,13 +107,13 @@ const CustomerBilling = ({ onDataChange }) => {
               </label>
               <Select
                 options={customer.map((customer) => ({
-                  label: customer.name,
+                  label: customer.firm,
                   value: customer._id,
                 }))}
                 value={
                   selectedCustomer
                     ? {
-                        label: selectedCustomer.name,
+                        label: selectedCustomer.firm,
                         value: selectedCustomer._id,
                       }
                     : null
@@ -128,7 +128,7 @@ const CustomerBilling = ({ onDataChange }) => {
                   const updatedForm = {
                     ...formData,
                     customerId: customerObj._id,
-                    customerName: customerObj.name,
+                    customerName: customerObj.firm,
                   };
                   setFormData(updatedForm); // Optional: update form state too
                   onDataChange(updatedForm);

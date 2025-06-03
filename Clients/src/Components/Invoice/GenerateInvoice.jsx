@@ -406,7 +406,7 @@ const GenerateInvoice = () => {
                 }}
               >
                 <strong>Customer Name:</strong>{" "}
-                {invoice.customerId.name || "N/A"}
+                {invoice.customerId.firm || "N/A"}
                 <br />
                 <strong>Address:</strong> {invoice.customerId.address || "N/A"}
                 <br />

@@ -64,9 +64,9 @@ const Navbarfristn = () => {
                   <div className="row">
                     {/* Brand */}
                     <div className="col-md-4">
-                      <Dropdown.Item as={Link} to="/add-company">
+                      {/* <Dropdown.Item as={Link} to="/add-company">
                         Add Company
-                      </Dropdown.Item>
+                      </Dropdown.Item> */}
                       <Dropdown.Item as={Link} to="/brand">
                         Add Brand
                       </Dropdown.Item>

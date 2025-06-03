@@ -12,15 +12,15 @@ import axios from "../../Config/axios";
 
 const VendorReport = () => {
   const [vendor, setVendor] = useState({
-    firmId: "",
+    firm: "",
     name: "",
     mobile: "",
     email: "",
     address: "",
+    gstNumber: "",
   });
   const [vendorList, setVendorList] = useState([]);
   const [editId, setEditId] = useState(null);
-  const [firm, setFirm] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +51,14 @@ const VendorReport = () => {
       await axios.post("/vendor", vendor);
     }
 
-    setVendor({ name: "", mobile: "", email: "", address: "" });
+    setVendor({
+      firm: "",
+      name: "",
+      mobile: "",
+      email: "",
+      address: "",
+      gstNumber: "",
+    });
     fetchVendors();
   };
 
@@ -64,20 +71,7 @@ const VendorReport = () => {
     await axios.delete(`/vendor/${id}`);
     fetchVendors();
   };
-  const fetchFirm = async () => {
-    try {
-      const res = await axios.get("/firm");
-      setFirm(res.data);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to fetch firms");
-    }
-  };
-  console.log(firm, "Firms fetched");
 
-  useEffect(() => {
-    fetchFirm();
-  }, []);
   return (
     <Container className="my-4">
       <Card className="p-4">
@@ -85,11 +79,23 @@ const VendorReport = () => {
         <Form onSubmit={handleSubmit}>
           <Row className="mt-3">
             <Col md={4}>
+              <Form.Group controlId="vendorFirm">
+                <Form.Label>Firm Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="firm"
+                  value={vendor.firm}
+                  onChange={handleChange}
+                  placeholder="Enter vendor firm"
+                />
+              </Form.Group>
+            </Col>
+            {/* <Col md={4}>
               <Form.Group controlId="firmName" className="mb-3">
                 <Form.Label>Select Firm</Form.Label>
                 <Form.Select
-                  name="firmId"
-                  value={vendor.firmId}
+                  name="firm"
+                  value={vendor.firm}
                   onChange={handleChange}
                   required
                 >
@@ -101,7 +107,7 @@ const VendorReport = () => {
                   ))}
                 </Form.Select>
               </Form.Group>
-            </Col>
+            </Col> */}
             <Col md={4}>
               <Form.Group controlId="vendorName">
                 <Form.Label>Vendor Name</Form.Label>
@@ -152,6 +158,18 @@ const VendorReport = () => {
                 />
               </Form.Group>
             </Col>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>GST No.</Form.Label>
+                <Form.Control
+                  name="gstNumber"
+                  className="form-control"
+                  placeholder="GST No."
+                  value={vendor.gstNumber}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
           </Row>
           <Button variant="primary" type="submit" className="mt-3">
             {editId ? "Update Vendor" : "Add Vendor"}
@@ -184,7 +202,7 @@ const VendorReport = () => {
               vendorList.map((v, index) => (
                 <tr key={v._id}>
                   <td>{index + 1}</td>
-                  <td>{v.firmId?.name}</td>
+                  <td>{v.firm}</td>
                   <td>{v.name}</td>
                   <td>{v.mobile}</td>
                   <td>{v.email}</td>

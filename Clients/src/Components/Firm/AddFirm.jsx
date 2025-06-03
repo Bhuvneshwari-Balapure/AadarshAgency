@@ -35,7 +35,7 @@ const AddFirm = () => {
       const res = await axios.post("/firm", formData);
       console.log(res.data);
       setSubmitSuccess(true);
-      alert("Firm created successfully!");
+      // alert("Firm created successfully!");
       // Optionally reset form
       setFormData({
         name: "",
@@ -51,7 +51,7 @@ const AddFirm = () => {
       });
     } catch (error) {
       console.error(error);
-      alert("Failed to create Firm");
+      // alert("Failed to create Firm");
     } finally {
       setIsSubmitting(false);
     }

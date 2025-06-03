@@ -36,11 +36,11 @@ const FirmDetail = () => {
   const deleteFirm = async (id) => {
     try {
       await axios.delete(`/firm/${id}`);
-      alert("Company deleted");
+      // alert("Company deleted");
       fetchCompanies();
     } catch (err) {
       console.error(err);
-      alert("Failed to delete company");
+      // alert("Failed to delete company");
     }
   };
 

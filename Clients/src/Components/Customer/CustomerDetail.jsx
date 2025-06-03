@@ -57,8 +57,8 @@ function CustomerDetail() {
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>Brand</th>
+                    <th>Firm Name</th>
+                    <th>Contract Person</th>
                     <th>Credit Limit</th>
                     <th>Credit Day</th>
                     <th>Actions</th>
@@ -68,8 +68,8 @@ function CustomerDetail() {
                   {customers.map((cust, index) => (
                     <tr key={cust._id}>
                       <td>{index + 1}</td>
+                      <td>{cust.firm || "N/A"}</td>
                       <td>{cust.name}</td>
-                      <td>{cust.firmId?.name || "N/A"}</td>
                       <td>{cust.creditLimit}</td>
                       <td>{new Date(cust.creditDay).toLocaleDateString()}</td>
                       <td>

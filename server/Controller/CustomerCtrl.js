@@ -13,7 +13,7 @@ exports.createCustomer = async (req, res) => {
 // READ all customers
 exports.getAllCustomers = async (req, res) => {
   try {
-    const customers = await Customer.find().populate("firmId", "name");
+    const customers = await Customer.find();
     res.json(customers);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -23,10 +23,7 @@ exports.getAllCustomers = async (req, res) => {
 // READ one customer
 exports.getCustomerById = async (req, res) => {
   try {
-    const customer = await Customer.findById(req.params.id).populate(
-      "firmId",
-      "name"
-    );
+    const customer = await Customer.findById(req.params.id);
     if (!customer) return res.status(404).json({ error: "Customer not found" });
     res.json(customer);
   } catch (err) {
