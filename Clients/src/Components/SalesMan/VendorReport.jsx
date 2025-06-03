@@ -14,11 +14,16 @@ const VendorReport = () => {
   const [vendor, setVendor] = useState({
     firm: "",
     name: "",
+    designation: "",
     mobile: "",
+    alternateMobile: "",
     email: "",
+    whatsapp: "",
+    city: "",
     address: "",
     gstNumber: "",
   });
+
   const [vendorList, setVendorList] = useState([]);
   const [editId, setEditId] = useState(null);
 
@@ -54,8 +59,12 @@ const VendorReport = () => {
     setVendor({
       firm: "",
       name: "",
+      designation: "",
       mobile: "",
+      alternateMobile: "",
       email: "",
+      whatsapp: "",
+      city: "",
       address: "",
       gstNumber: "",
     });
@@ -120,6 +129,17 @@ const VendorReport = () => {
                 />
               </Form.Group>
             </Col>
+            <Col md={4} className="mb-3">
+              <Form.Label>Designation</Form.Label>
+              <Form.Control
+                name="designation"
+                placeholder="Designation"
+                value={vendor.designation}
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+          <Row className="mt-3">
             <Col md={4}>
               <Form.Group controlId="vendorMobile">
                 <Form.Label>Mobile Number</Form.Label>
@@ -132,8 +152,15 @@ const VendorReport = () => {
                 />
               </Form.Group>
             </Col>
-          </Row>
-          <Row className="mt-3">
+            <Col md={4} className="mb-3">
+              <Form.Label>Alternate Mobile</Form.Label>
+              <Form.Control
+                name="alternateMobile"
+                placeholder="Alternate Mobile"
+                value={vendor.alternateMobile}
+                onChange={handleChange}
+              />
+            </Col>
             <Col md={4}>
               <Form.Group controlId="vendorEmail">
                 <Form.Label>Email</Form.Label>
@@ -146,6 +173,27 @@ const VendorReport = () => {
                 />
               </Form.Group>
             </Col>
+          </Row>
+          <Row className="mt-3">
+            <Col md={4} className="mb-3">
+              <Form.Label>WhatsApp No.</Form.Label>
+              <Form.Control
+                name="whatsapp"
+                placeholder="WhatsApp"
+                value={vendor.whatsapp}
+                onChange={handleChange}
+              />
+            </Col>
+            <Col md={4} className="mb-3">
+              <Form.Label>City</Form.Label>
+              <Form.Control
+                name="city"
+                placeholder="City"
+                value={vendor.city}
+                onChange={handleChange}
+              />
+            </Col>
+
             <Col md={4}>
               <Form.Group controlId="vendorAddress">
                 <Form.Label>Address</Form.Label>

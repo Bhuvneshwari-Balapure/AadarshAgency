@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, Container, Card, Toast } from "react-bootstrap";
+import { Form, Button, Container, Card, Row, Col } from "react-bootstrap";
 import axios from "../../Config/axios";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -8,18 +8,30 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
     firm: "",
     name: "",
     mobile: "",
+    alternateMobile: "",
+    email: "",
+    whatsapp: "",
+    designation: "",
+    city: "",
     address: "",
-    gstNumber: "",
     creditLimit: "",
+    gstNumber: "",
     creditDay: "",
   });
 
-  // edit customer
   useEffect(() => {
     if (editingCustomer) {
       setCustomer({
-        name: editingCustomer.name || "",
         firm: editingCustomer.firm || "",
+        name: editingCustomer.name || "",
+        designation: editingCustomer.designation || "",
+        city: editingCustomer.city || "",
+        mobile: editingCustomer.mobile || "",
+        alternateMobile: editingCustomer.alternateMobile || "",
+        email: editingCustomer.email || "",
+        whatsapp: editingCustomer.whatsapp || "",
+        address: editingCustomer.address || "",
+        gstNumber: editingCustomer.gstNumber || "",
         creditLimit: editingCustomer.creditLimit || "",
         creditDay: editingCustomer.creditDay?.slice(0, 10) || "",
       });
@@ -34,17 +46,27 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
     e.preventDefault();
     try {
       if (editingCustomer) {
-        // Update existing customer
         await axios.put(`/customer/${editingCustomer._id}`, customer);
         toast.success("Customer updated successfully!");
       } else {
-        // Add new customer
         await axios.post("/customer", customer);
         toast.success("Customer saved successfully!");
       }
 
-      // Reset form and refresh data
-      setCustomer({ name: "", firm: "", creditLimit: "", creditDay: "" });
+      setCustomer({
+        firm: "",
+        name: "",
+        designation: "",
+        city: "",
+        mobile: "",
+        alternateMobile: "",
+        email: "",
+        whatsapp: "",
+        address: "",
+        gstNumber: "",
+        creditLimit: "",
+        creditDay: "",
+      });
       setEditingCustomer(null);
       if (refresh) refresh();
     } catch (error) {
@@ -56,11 +78,11 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
   return (
     <Container className="mt-4">
       <Card>
-        <Card.Header>Add Customer</Card.Header>
+        <Card.Header>{editingCustomer ? "Edit" : "Add"} Customer</Card.Header>
         <Card.Body>
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Group className="mb-3">
+            <Row>
+              <Col md={6} className="mb-3">
                 <Form.Label>Firm</Form.Label>
                 <Form.Control
                   name="firm"
@@ -70,85 +92,121 @@ function AddCustomer({ refresh, editingCustomer, setEditingCustomer }) {
                   onChange={handleChange}
                   required
                 />
-              </Form.Group>
-              {/* <Form.Select
-                name="firmId"
-                value={customer.firmId}
-                onChange={handleChange}
-                required
-                type="text"
-              > */}
-              {/* <option value="">Select Firm</option>
-                {companies.map((comp) => (
-                  <option key={comp._id} value={comp._id}>
-                    {comp.name}
-                  </option>
-                ))} */}
-              {/* </Form.Select>*/}
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Contract Person</Form.Label>
-              <Form.Control
-                name="name"
-                value={customer.name}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
+              </Col>
+              <Col md={6} className="mb-3">
+                <Form.Label>Contract Person</Form.Label>
+                <Form.Control
+                  name="name"
+                  placeholder="Contact Person"
+                  value={customer.name}
+                  onChange={handleChange}
+                  required
+                />
+              </Col>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Mobile Number</Form.Label>
-              <Form.Control
-                name="mobile"
-                value={customer.mobile}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                name="address"
-                value={customer.address}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
+              <Col md={6} className="mb-3">
+                <Form.Label>Designation</Form.Label>
+                <Form.Control
+                  name="designation"
+                  placeholder="Designation"
+                  value={customer.designation}
+                  onChange={handleChange}
+                />
+              </Col>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Credit Limit</Form.Label>
-              <Form.Control
-                type="number"
-                name="creditLimit"
-                value={customer.creditLimit}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
+              <Col md={6} className="mb-3">
+                <Form.Label>Mobile Number</Form.Label>
+                <Form.Control
+                  name="mobile"
+                  placeholder="Mobile"
+                  value={customer.mobile}
+                  onChange={handleChange}
+                  required
+                />
+              </Col>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Credit Day</Form.Label>
-              <Form.Control
-                type="date"
-                name="creditDay"
-                value={customer.creditDay}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
+              <Col md={6} className="mb-3">
+                <Form.Label>Alternate Mobile</Form.Label>
+                <Form.Control
+                  name="alternateMobile"
+                  placeholder="Alternate Mobile"
+                  value={customer.alternateMobile}
+                  onChange={handleChange}
+                />
+              </Col>
 
-            <Form.Group className="mb-3">
-              <Form.Label>GST No.</Form.Label>
-              <Form.Control
-                name="gstNumber"
-                className="form-control"
-                placeholder="GST No."
-                value={customer.gstNumber}
-                onChange={handleChange}
-              />
-            </Form.Group>
+              <Col md={6} className="mb-3">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  name="email"
+                  placeholder="Email"
+                  value={customer.email}
+                  onChange={handleChange}
+                />
+              </Col>
 
-            <Button type="submit">
+              <Col md={6} className="mb-3">
+                <Form.Label>WhatsApp No.</Form.Label>
+                <Form.Control
+                  name="whatsapp"
+                  placeholder="WhatsApp"
+                  value={customer.whatsapp}
+                  onChange={handleChange}
+                />
+              </Col>
+
+              <Col md={6} className="mb-3">
+                <Form.Label>City</Form.Label>
+                <Form.Control
+                  name="city"
+                  placeholder="City"
+                  value={customer.city}
+                  onChange={handleChange}
+                />
+              </Col>
+
+              <Col md={12} className="mb-3">
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  name="address"
+                  placeholder="Address"
+                  value={customer.address}
+                  onChange={handleChange}
+                />
+              </Col>
+
+              <Col md={6} className="mb-3">
+                <Form.Label>Credit Limit</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="creditLimit"
+                  placeholder="Credit Limit"
+                  value={customer.creditLimit}
+                  onChange={handleChange}
+                />
+              </Col>
+
+              <Col md={6} className="mb-3">
+                <Form.Label>Credit Day</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="creditDay"
+                  value={customer.creditDay}
+                  onChange={handleChange}
+                />
+              </Col>
+
+              <Col md={6} className="mb-3">
+                <Form.Label>GST No.</Form.Label>
+                <Form.Control
+                  name="gstNumber"
+                  placeholder="GST No."
+                  value={customer.gstNumber}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Row>
+            <Button type="submit" variant="primary">
               {editingCustomer ? "Update Customer" : "Add Customer"}
             </Button>
           </Form>

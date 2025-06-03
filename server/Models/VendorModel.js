@@ -7,8 +7,16 @@ const vendorSchema = new mongoose.Schema({
     required: true,
   },
   name: String,
-  mobile: String,
+  designation: String,
+  mobile: Number,
+  alternateMobile: Number,
   email: String,
+  whatsapp: Number,
+  city: String,
+  address: String,
+  gstNumber: {
+    type: String,
+  },
   address: String,
 });
 
