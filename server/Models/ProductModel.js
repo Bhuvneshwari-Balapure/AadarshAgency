@@ -4,6 +4,9 @@ const productSchema = new mongoose.Schema({
   companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
 
   productName: { type: String },
+  productImg: {
+    type: String,
+  },
   primaryUnit: String,
   secondaryUnit: String,
   primaryPrice: Number,

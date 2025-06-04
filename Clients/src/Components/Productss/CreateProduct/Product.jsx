@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { PencilFill, TrashFill } from "react-bootstrap-icons";
 import axios from "../../../Config/axios";
+const API_BASE = import.meta.env.VITE_API;
+const IMAGE_BASE = import.meta.env.VITE_API.replace(/\/api$/, "");
+import Image from "react-bootstrap/Image";
 
 const Product = () => {
   const [products, setProducts] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-
+  // const [photo, setPhoto] = useState(null);
   const [formData, setFormData] = useState({
     companyId: "",
     productName: "",
+    productImg: null,
     // unit: "", // New field
     mrp: "", // New field
     salesRate: "", // New field
@@ -68,7 +72,6 @@ const Product = () => {
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     let processedValue = value;
-
     if (type === "number" && value !== "") {
       processedValue = Number(value);
       // Ensure quantity is never negative
@@ -81,7 +84,13 @@ const Product = () => {
       [name]: processedValue,
     }));
   };
+  // --------------------------------------------
+  const [photo, setPhoto] = useState(null);
 
+  const handlePhotoChange = (e) => {
+    setPhoto(e.target.files[0]);
+  };
+  // ---------------------------------------------------
   const handleEdit = (index) => {
     const selectedProduct = products[index];
     setFormData({
@@ -102,44 +111,64 @@ const Product = () => {
     });
     setEditIndex(index);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const productData = {
-        companyId: formData.companyId,
-        productName: formData.productName,
-        // unit: formData.unit,
-        mrp: formData.mrp,
-        salesRate: formData.salesRate,
-        purchaseRate: formData.purchaseRate,
-        availableQty: formData.availableQty || 0,
-        hsnCode: formData.hsnCode,
-        gstPercent: formData.gstPercent,
-        primaryUnit: formData.primaryUnit,
-        secondaryUnit: formData.secondaryUnit,
-        primaryPrice: formData.primaryPrice,
-        secondaryPrice: formData.secondaryPrice,
-        lastUpdated: new Date(),
-      };
+      if (photo) {
+        const data = new FormData();
+        data.append("companyId", formData.companyId);
+        data.append("productName", formData.productName);
+        data.append("mrp", formData.mrp);
+        data.append("salesRate", formData.salesRate);
+        data.append("purchaseRate", formData.purchaseRate);
+        data.append("availableQty", formData.availableQty);
+        data.append("hsnCode", formData.hsnCode);
+        data.append("gstPercent", formData.gstPercent);
+        data.append("primaryUnit", formData.primaryUnit);
+        data.append("secondaryUnit", formData.secondaryUnit);
+        data.append("primaryPrice", formData.primaryPrice);
+        data.append("secondaryPrice", formData.secondaryPrice);
+        data.append("productImg", photo);
 
-      if (formData._id) {
-        // Edit mode - update existing product
-        await axios.put(`/product/${formData._id}`, productData);
-        alert("Product updated successfully!");
+        await axios.post("/product", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        alert("Product created successfully with image!");
       } else {
-        // Create mode - add new product
-        await axios.post("/product", productData);
-        alert("Product created successfully!");
-        console.log(" new product with data:", productData);
+        const productData = {
+          companyId: formData.companyId,
+          productName: formData.productName,
+          mrp: formData.mrp,
+          salesRate: formData.salesRate,
+          purchaseRate: formData.purchaseRate,
+          availableQty: formData.availableQty || 0,
+          hsnCode: formData.hsnCode,
+          gstPercent: formData.gstPercent,
+          primaryUnit: formData.primaryUnit,
+          secondaryUnit: formData.secondaryUnit,
+          primaryPrice: formData.primaryPrice,
+          secondaryPrice: formData.secondaryPrice,
+          lastUpdated: new Date(),
+        };
+
+        if (formData._id) {
+          await axios.put(`/product/${formData._id}`, productData);
+          alert("Product updated successfully!");
+        } else {
+          await axios.post("/product", productData);
+          alert("Product created successfully!");
+        }
       }
 
-      // Reset form and refresh list
+      // Reset form
       setFormData({
         companyId: "",
         productName: "",
-        // unit: "",
+        productImg: null,
         mrp: "",
         salesRate: "",
         purchaseRate: "",
@@ -151,6 +180,7 @@ const Product = () => {
         primaryPrice: "",
         secondaryPrice: "",
       });
+      setPhoto(null); // Reset image
       setEditIndex(null);
       fetchProducts();
     } catch (err) {
@@ -158,6 +188,62 @@ const Product = () => {
       alert("Failed to submit product.");
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const productData = {
+  //       companyId: formData.companyId,
+  //       productName: formData.productName,
+  //       // unit: formData.unit,
+  //       mrp: formData.mrp,
+  //       salesRate: formData.salesRate,
+  //       purchaseRate: formData.purchaseRate,
+  //       availableQty: formData.availableQty || 0,
+  //       hsnCode: formData.hsnCode,
+  //       gstPercent: formData.gstPercent,
+  //       primaryUnit: formData.primaryUnit,
+  //       secondaryUnit: formData.secondaryUnit,
+  //       primaryPrice: formData.primaryPrice,
+  //       secondaryPrice: formData.secondaryPrice,
+  //       lastUpdated: new Date(),
+  //     };
+
+  //     if (formData._id) {
+  //       // Edit mode - update existing product
+  //       await axios.put(`/product/${formData._id}`, productData);
+  //       alert("Product updated successfully!");
+  //     } else {
+  //       // Create mode - add new product
+  //       await axios.post("/product", productData);
+  //       alert("Product created successfully!");
+  //       console.log(" new product with data:", productData);
+  //     }
+
+  //     // Reset form and refresh list
+  //     setFormData({
+  //       companyId: "",
+  //       productName: "",
+  //       // unit: "",
+  //       mrp: "",
+  //       salesRate: "",
+  //       purchaseRate: "",
+  //       availableQty: 0,
+  //       hsnCode: "",
+  //       gstPercent: 9,
+  //       primaryUnit: "",
+  //       secondaryUnit: "",
+  //       primaryPrice: "",
+  //       secondaryPrice: "",
+  //     });
+  //     setEditIndex(null);
+  //     fetchProducts();
+  //   } catch (err) {
+  //     console.error("Error submitting product:", err);
+  //     alert("Failed to submit product.");
+  //   }
+  // };
 
   const handleDelete = async (index) => {
     const productToDelete = products[index];
@@ -204,6 +290,10 @@ const Product = () => {
   //   }
   // };
 
+  //  const handlePhotoChange = (e) => {
+  //   setPhoto(e.target.files[0]);
+  // };
+
   return (
     <div className="container mt-2">
       <h3 className="mb-3">Create Product</h3>
@@ -242,6 +332,16 @@ const Product = () => {
                       name="productName"
                       value={formData.productName}
                       onChange={handleChange}
+                      className="form-control"
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label>Product Image</label>
+                    <input
+                      type="file"
+                      name="productImg"
+                      onChange={handlePhotoChange}
                       className="form-control"
                     />
                   </div>
@@ -450,6 +550,7 @@ const Product = () => {
                   <table className="table table-bordered mt-4">
                     <thead className="thead-light">
                       <tr>
+                        <th>Product Image</th>
                         <th>Product Name</th>
                         <th>Brand</th>
                         <th>MRP</th>
@@ -465,6 +566,18 @@ const Product = () => {
                     <tbody>
                       {products.map((product, index) => (
                         <tr key={product._id}>
+                          <td>
+                            {product.productImg ? (
+                              <Image
+                                src={`${IMAGE_BASE}/Images/${product.productImg}`}
+                                roundedCircle
+                                width={50}
+                                height={50}
+                              />
+                            ) : (
+                              "No Photo"
+                            )}
+                          </td>
                           <td>{product.productName}</td>
                           <td>{product.companyId?.name || "-"}</td>
                           <td>{product.mrp}</td>

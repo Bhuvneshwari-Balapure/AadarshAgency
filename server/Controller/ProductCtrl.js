@@ -21,6 +21,7 @@ const createProduct = async (req, res) => {
       primaryPrice,
       secondaryPrice,
     } = req.body;
+    const productImg = req.file ? req.file.filename : null;
 
     // Basic validation (add more if needed)
     // if (!companyId || !categoryId || !subCategoryId || !productName) {
@@ -30,6 +31,7 @@ const createProduct = async (req, res) => {
     const newProduct = new Product({
       companyId,
       productName,
+      productImg,
       // unit,
       mrp,
       salesRate,
