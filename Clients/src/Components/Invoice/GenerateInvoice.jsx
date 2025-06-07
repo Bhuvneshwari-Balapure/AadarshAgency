@@ -304,7 +304,6 @@ const GenerateInvoice = () => {
             `/customer/${response.data.customerId._id}`
           );
           setFullCustomer(customerResponse.data);
-          // Fetch product MRPs
         }
       } catch (error) {
         console.error("Error fetching invoice:", error);
