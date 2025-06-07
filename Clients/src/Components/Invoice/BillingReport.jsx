@@ -71,6 +71,7 @@ function BillingReport() {
   const [customerData, setCustomerData] = useState({});
   // const navigate = useNavigate(); // ✅ Correct hook
   const [finalAmount, setFinalAmount] = useState(0);
+  const [resetKey, setResetKey] = useState(0);
 
   const handleBillingDataChange = (data, totalAmount) => {
     setBillingData(data);
@@ -79,6 +80,12 @@ function BillingReport() {
 
   const handleCustomerDataChange = (data) => {
     setCustomerData(data);
+  };
+  const resetForm = () => {
+    setBillingData([]);
+    setCustomerData({});
+    setFinalAmount(0);
+    setResetKey((prev) => prev + 1); // 🔁 Trigger re-mount of children
   };
 
   const handleSubmit = async () => {
@@ -94,11 +101,15 @@ function BillingReport() {
       };
 
       const response = await axios.post("/pro-billing", finalData);
+      toast.success("Invoice saved successfully!");
 
       console.log(response.data, "Response from server"); // ✅ Log the response
       // const invoiceId = response._id;
 
-      toast.success("Invoice saved successfully!");
+      // 🔁 Reset form after toast (e.g., after 3 seconds)
+      setTimeout(() => {
+        resetForm();
+      }, 3000);
       // navigate(`/generate-invoice/${invoiceId}`); // ✅ Works correctly now
       // console.log("Response from server:", response.data);
     } catch (error) {
@@ -109,8 +120,14 @@ function BillingReport() {
 
   return (
     <>
-      <ProductBillingReport onBillingDataChange={handleBillingDataChange} />
-      <CustomerBilling onDataChange={handleCustomerDataChange} />
+      <ProductBillingReport
+        onBillingDataChange={handleBillingDataChange}
+        key={resetKey}
+      />
+      <CustomerBilling
+        key={resetKey + 100} // avoid collision
+        onDataChange={handleCustomerDataChange}
+      />
 
       <hr />
       <div className="text-center mt-4">

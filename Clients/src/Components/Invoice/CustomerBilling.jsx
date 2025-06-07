@@ -53,25 +53,6 @@ const CustomerBilling = ({ onDataChange }) => {
   });
   console.log(customer, "ghfhj");
 
-  //   const handleChange = (e) => {
-  //     const { name, value } = e.target;
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       [name]: value,
-  //     }));
-  //   };
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   const updatedForm = {
-  //     ...formData,
-  //     [name]: value,
-  //   };
-
-  //   setFormData(updatedForm);
-  //   onDataChange(updatedForm); // 🔁 Pass updated form to parent
-  // };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     const updatedForm = {

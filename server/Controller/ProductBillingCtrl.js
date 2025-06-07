@@ -62,20 +62,10 @@ const getAllInvoices = async (req, res) => {
   try {
     const invoices = await Invoice.find()
       .sort({ createdAt: -1 })
-      .populate(
-        "companyId",
-        "name contactPerson designation city address mobile alternateMobile email whatsapp gstNumber"
-      )
-      .populate(
-        "salesmanId",
-        "name designation mobile email city address alternateMobile photo username"
-      )
-      .populate(
-        "billing.productId",
-        "productName primaryUnit secondaryUnit primaryPrice secondaryPrice hsnCode gstPercent"
-      )
-      .populate("customerId", "name");
-
+      .populate("companyId") // or add fields if you want to limit
+      .populate("salesmanId")
+      .populate("billing.productId") // ✅ full product details
+      .populate("customerId"); // ✅ full customer details
     // console.log(invoices, "invoice");
     res.status(200).json(invoices);
   } catch (error) {
@@ -102,19 +92,23 @@ const deleteInvoice = async (req, res) => {
 const getInvoiceById = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id)
-      .populate(
-        "companyId",
-        "name contactPerson designation city address mobile alternateMobile email whatsapp gstNumber"
-      )
-      .populate(
-        "salesmanId",
-        "name designation mobile email city address alternateMobile photo username"
-      )
-      .populate(
-        "billing.productId",
-        "productName primaryUnit secondaryUnit primaryPrice secondaryPrice hsnCode gstPercent"
-      )
-      .populate("customerId", "name");
+      // .populate(
+      //   "companyId",
+      //   "name contactPerson designation city address mobile alternateMobile email whatsapp gstNumber"
+      // )
+      // .populate(
+      //   "salesmanId",
+      //   "name designation mobile email city address alternateMobile photo username"
+      // )
+      // .populate(
+      //   "billing.productId",
+      //   "productName primaryUnit secondaryUnit primaryPrice secondaryPrice hsnCode gstPercent mrp "
+      // )
+      // .populate("customerId", "name");
+      .populate("companyId")
+      .populate("salesmanId")
+      .populate("billing.productId") // ✅ full product fields
+      .populate("customerId", "firm name mobile address gstNumber"); // ✅ full customer fields
 
     // ✅ Add this
 

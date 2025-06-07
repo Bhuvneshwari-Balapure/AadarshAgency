@@ -291,12 +291,21 @@ const GenerateInvoice = () => {
   const { id } = useParams();
   const [invoice, setInvoice] = useState(null);
   const [error, setError] = useState(null);
+  const [fullCustomer, setFullCustomer] = useState(null);
 
   useEffect(() => {
     const fetchInvoice = async () => {
       try {
         const response = await axios.get(`/pro-billing/${id}`);
         setInvoice(response.data);
+        // If invoice has customerId, fetch full customer details
+        if (response.data.customerId?._id) {
+          const customerResponse = await axios.get(
+            `/customer/${response.data.customerId._id}`
+          );
+          setFullCustomer(customerResponse.data);
+          // Fetch product MRPs
+        }
       } catch (error) {
         console.error("Error fetching invoice:", error);
         setError("Failed to load invoice. Please try again.");
@@ -406,13 +415,14 @@ const GenerateInvoice = () => {
                 }}
               >
                 <strong>Customer Name:</strong>{" "}
-                {invoice.customerId.firm || "N/A"}
+                {console.log("Customer ID:", fullCustomer?.firm)}
+                {fullCustomer?.firm || "N/A"}
                 <br />
-                <strong>Address:</strong> {invoice.customerId.address || "N/A"}
+                <strong>Address:</strong> {fullCustomer?.address || "N/A"}
                 <br />
-                <strong>Mobile:</strong> {invoice.customerId.mobile || "N/A"}
+                <strong>Mobile:</strong> {fullCustomer?.mobile || "N/A"}
                 <br />
-                <strong>GSTIN:</strong> {invoice.customerId.gstNumber || "N/A"}
+                <strong>GSTIN:</strong> {fullCustomer?.gstNumber || "N/A"}
               </div>
 
               {/* Right box */}
@@ -454,7 +464,7 @@ const GenerateInvoice = () => {
                   <th>#</th>
                   <th>Item Name</th>
                   <th>HSN Code</th>
-                  <th>GST</th>
+                  <th>MRP</th>
                   <th>Qty</th>
                   <th>Free</th>
                   <th>Rate</th>
@@ -473,7 +483,7 @@ const GenerateInvoice = () => {
                     <td>{pageIndex * 14 + index + 1}</td>
                     <td>{item.itemName || "N/A"}</td>
                     <td>{item.productId?.hsnCode || "N/A"}</td>
-                    <td>{item.gst || 0}</td>
+                    <td>{item.productId?._id?.mrp || 0}</td>
                     <td>
                       {`${item.qty || 0} 
                     `}
@@ -486,10 +496,10 @@ const GenerateInvoice = () => {
                     <td>{item.cd || 0}</td>
                     <td>{item.total || 0}</td>
                     <td>
-                      {(item.productId?.gst || 0) / 2} {/* SGST */}
+                      {(item.productId?.gstPercent || 0) / 2} {/* SGST */}
                     </td>
                     <td>
-                      {(item.gstPercent || 0) / 2} {/* CGST */}
+                      {(item.productId?.gstPercent || 0) / 2} {/* CGST */}
                     </td>
 
                     <td>{item.amount || 0}</td>
