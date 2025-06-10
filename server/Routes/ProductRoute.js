@@ -7,4 +7,6 @@ router.get("/", productCtrl.getProducts); // GET all products with optional filt
 router.delete("/:id", productCtrl.deleteProduct); // DELETE a product
 router.put("/:id", productCtrl.updateProduct); // UPDATE a product
 router.get("/update-product-quantity", productCtrl.UpdateProductQuantity);
+// ✅ New route to get product by ID
+router.get("/:id", productCtrl.getProductById);
 module.exports = router;

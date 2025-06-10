@@ -292,6 +292,7 @@ const GenerateInvoice = () => {
   const [invoice, setInvoice] = useState(null);
   const [error, setError] = useState(null);
   const [fullCustomer, setFullCustomer] = useState(null);
+  const [allProducts, setAllProsducts] = useState([]);
 
   useEffect(() => {
     const fetchInvoice = async () => {
@@ -304,6 +305,12 @@ const GenerateInvoice = () => {
             `/customer/${response.data.customerId._id}`
           );
           setFullCustomer(customerResponse.data);
+        }
+        if (response.data.productId?._id) {
+          const productResponse = await axios.put(
+            `/product/${response.data.productId?._id}`
+          );
+          setAllProsducts(productResponse.data);
         }
       } catch (error) {
         console.error("Error fetching invoice:", error);
@@ -482,7 +489,7 @@ const GenerateInvoice = () => {
                     <td>{pageIndex * 14 + index + 1}</td>
                     <td>{item.itemName || "N/A"}</td>
                     <td>{item.productId?.hsnCode || "N/A"}</td>
-                    <td>{item.productId?._id?.mrp || 0}</td>
+                    <td>{item.allProducts?.mrp || 0}</td>
                     <td>
                       {`${item.qty || 0} 
                     `}
